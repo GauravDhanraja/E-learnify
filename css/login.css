@@ -154,34 +154,6 @@ section{
    color: var(--black);
 }
 
-.header .flex .search-form{
-   width: 50rem;
-   border-radius: .5rem;
-   background-color: var(--light-bg);
-   padding:1.5rem 2rem;
-   display: flex;
-   gap:2rem;
-
-}
-
-.header .flex .search-form input{
-   width: 100%;
-   font-size: 1.8rem;
-   color:var(--black);
-   background:none;
-}
-
-.header .flex .search-form button{
-   background:none;
-   font-size: 2rem;
-   cursor: pointer;
-   color:var(--black);
-}
-
-.header .flex .search-form button:hover{
-   color: var(--main-color);
-}
-
 .header .flex .icons div{
    font-size: 2rem;
    color:var(--black);
@@ -197,11 +169,6 @@ section{
 .header .flex .icons div:hover{
    background-color: var(--black);
    color:var(--white);
-}
-
-
-#search-btn{
-   display: none;
 }
 
 .form-container{
@@ -297,31 +264,6 @@ section{
 
    html{
       font-size: 55%;
-   }
-
-}
-
-@media (max-width:768px){
-
-   #search-btn{
-      display: inline-block;
-   }
-
-   .header .flex .search-form{
-      position: absolute;
-      top: 99%; left: 0; right: 0;
-      border-top: var(--border);
-      border-bottom: var(--border);
-      background-color: var(--white);
-      border-radius: 0;
-      width: auto;
-      padding: 2rem;
-      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-      transition: .2s linear;
-   }
-
-   .header .flex .search-form.active{
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
    }
 
 }
