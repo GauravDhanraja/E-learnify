@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 $con = new mysqli("localhost", "elearnify-admin", "userAdmin@127", "ElearnifyDB");
 if ($con->connect_error) {
@@ -19,7 +18,7 @@ if ($result->num_rows > 0) {
     if (password_verify($password, $row['password'])) {
         $_SESSION['email'] = $email;
         $_SESSION['user_id'] = $row['id']; 
-        header("Location: home.html");
+        header(Location: home.html);
         exit(); 
     } else {
         echo "Invalid password";
