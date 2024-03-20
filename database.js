@@ -15,4 +15,5 @@
   
   //reference your database
  
- const loginDB = firebase.database().ref('login')
+ var loginDB = firebase.database().ref('login');
+ document.getElementById()
