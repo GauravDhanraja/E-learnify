@@ -27,10 +27,10 @@ toggleBtn.onclick = (e) =>{
    }
 }
 
-let profile2 = document.querySelector('.header .flex .profile');
+let profile = document.querySelector('.header .flex .profile');
 
 document.querySelector('#user-btn').onclick = () =>{
-   profile2.classList.toggle('active');
+   profile.classList.toggle('active');
    search.classList.remove('active');
 }
 
@@ -38,7 +38,7 @@ let search = document.querySelector('.header .flex .search-form');
 
 document.querySelector('#search-btn').onclick = () =>{
    search.classList.toggle('active');
-   profile2.classList.remove('active');
+   profile.classList.remove('active');
 }
 
 let sideBar = document.querySelector('.side-bar');
@@ -54,7 +54,7 @@ document.querySelector('#close-btn').onclick = () =>{
 }
 
 window.onscroll = () =>{
-   profile2.classList.remove('active');
+   profile.classList.remove('active');
    search.classList.remove('active');
 
    if(window.innerWidth < 1200){
