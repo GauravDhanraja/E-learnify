@@ -4,53 +4,77 @@
     gap:1.5rem;
     justify-content: center;
     align-items: flex-start;
+    position: auto;
  }
  
  .home-grid .box-container .box{
     background-color: var(--white);
     border-radius: .5rem;
     padding:2rem;
+    justify-self: center;
+    justify-content: center;
+    overflow: auto;
  }
+
+ .tg { 
+   border-collapse: collapse;
+   border-spacing: 0;
+}
+
+.tg td {
+   border-color: black;
+   border-style: solid;
+   border-width: 1px;
+   font-family: Arial, sans-serif;
+   font-size: 14px;
+   overflow: hidden;
+   padding: 7px 14px;
+   word-break: normal;
+}
+
+.tg th {
+   border-color: black;
+   border-style: solid;
+   border-width: 1px;
+   font-family: Arial, sans-serif;
+   font-size: 14px;
+   font-weight: normal;
+   overflow: hidden;
+   padding: 7px 14px;
+   word-break: normal;
+}
+
+.tg .tg-wa1i {
+   font-weight: bold;
+   text-align: center;
+   vertical-align: middle;
+}
+
+.tg .tg-nrix {
+   text-align: center;
+   vertical-align: middle;
+}
+
+@media screen and (max-width: 767px) {
+   .tg {
+       width: auto !important;
+   }
+
+   .tg col {
+       width: auto !important;
+   }
+
+   .tg-wrap {
+       overflow-x: auto;
+       -webkit-overflow-scrolling: touch;
+   }
+}
+
  
  .home-grid .box-container .box .title{
     font-size: 2rem;
     color: var(--black);
     text-transform: capitalize;
- }
- 
- .home-grid .box-container .box .flex{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 2rem;
- }
- 
- .home-grid .box-container .flex a{
-    background-color: var(--light-bg);
-    border-radius: .5rem;
-    padding: 1rem 1.5rem;
-    font-size: 1.5rem;
- }
- 
- .home-grid .box-container .flex a i{
-    margin-right: 1rem;
-    color:var(--black);
- }
- 
- .home-grid .box-container .flex a span{
-    color:var(--light-color);
- }
- 
- .home-grid .box-container .flex a:hover{
-    background-color: var(--black);
- }
- 
- .home-grid .box-container .flex a:hover span{
-    color:var(--white);
- }
- 
- .home-grid .box-container .flex a:hover i{
-    color:var(--white);
  }
  
  .home-grid .box-container .tutor{
