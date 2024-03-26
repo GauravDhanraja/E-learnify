@@ -6,7 +6,7 @@ from firebase_admin import credentials, firestore, storage
 from flask import Flask, render_template, request, url_for, session, send_file, redirect
 
 import essentials.credentials
-import web.admin, web.public, web.uploads
+import web.admin, web.public, web
 
 firebase_admin.initialize_app(credentials.Certificate(essentials.credentials.creds_for_firebase()))
 firebase = pyrebase.initialize_app(essentials.credentials.creds_for_pyrebase())
@@ -40,7 +40,7 @@ def authenticate():
 @app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
-        if user_record  == "elearnify016@gmail.in":
+        if user_record  == "elearnify.admin@nmamit.in":
             return redirect(url_for("admin_dashboard"))
         else:
             return redirect(url_for("public_dashboard"))
@@ -55,7 +55,7 @@ def sign_in_route():
                 if not email or not password:
                     return 'Email and password are required.'
                 user_record = sign_in(email, password)
-                if user_record and email == "elearnify016@gmail.com":
+                if user_record and email == "elearnify.admin@nmamit.in.com":
                     session['user_id'] = user_record['localId']
                     return redirect(url_for('admin_dashboard'))
                 else:
@@ -85,6 +85,7 @@ def public_style_css():
 @app.route("/public/css/courses.css", methods=["GET"])
 def public_courses_css():
     return send_file("web/public/css/courses.css")
+
 
 @app.route("/public/js/script.js", methods=["GET"])
 def public_script_js():
