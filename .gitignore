@@ -1,0 +1,7 @@
+/.venv
+.firebaserc
+firebase.json
+firestore.rules
+storage.rules
+firestore.indexes.json
+e-learnify-898a1-firebase-adminsdk-pt880-55b35c24e3.json
