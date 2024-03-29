@@ -8,12 +8,12 @@
 }
 
 .home-grid .box-container .box{
-   background-color: var(--white);
-   border-radius: .5rem;
-   padding:2rem;
-   justify-self: center;
-   justify-content: center;
-   overflow: auto;
+  background-color: var(--white);
+  border-radius: .5rem;
+  padding:2rem;
+  position: absolute;
+  justify-content: center;
+  overflow: auto;
 }
 
 .tg { 

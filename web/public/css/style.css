@@ -134,7 +134,7 @@ section{
 }
 
 .header{
-   position: sticky;
+   position: relative;
    top:0; left:0; right: 0;
    background-color: var(--white);
    z-index: 1000;
@@ -143,25 +143,31 @@ section{
 
 .header .flex{
    display: flex;
-   align-items: center;
-   justify-content: space-between;
-   position: relative;
+   max-width: 100vw;
+   width: 100%;
    padding: 1.5rem 2rem;
+   justify-content: space-between;
+   margin-left: 0%;
+   position: relative;
 }
 
 .header .flex .logo{
-   font-size: 2.5rem;
+   font-size: 3rem;
    color: var(--black);
+   padding-left: 30px;
 }
 
 .header .flex .search-form{
-   width: 50rem;
+   position: fixed;
+   left: 37vw;
+   width: 100%;
+   max-width: 26vw;
    border-radius: .5rem;
    background-color: var(--light-bg);
    padding:1.5rem 2rem;
-   display: flex;
-   gap:2rem;
-
+   display: flex; 
+   align-self: center;
+   margin: auto;
 }
 
 .header .flex .search-form input{
@@ -193,6 +199,7 @@ section{
    cursor: pointer;
    text-align: center;
    margin-left: .7rem;
+   justify-self: flex-end;
 }
 
 .header .flex .icons div:hover{
@@ -202,7 +209,7 @@ section{
 
 .header .flex .profile{
    position: absolute;
-   top:120%; right: 2rem;
+   top:120%; right: 2rem;  
    background-color: var(--white);
    border-radius: .5rem;
    padding: 1.5rem;
@@ -251,6 +258,7 @@ section{
    height: 100vh;
    border-right: var(--border);
    z-index: 1200;
+   transition: left 0.2s linear;
 }
 
 .side-bar #close-btn{

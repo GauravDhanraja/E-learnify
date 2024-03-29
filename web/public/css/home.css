@@ -11,7 +11,7 @@
     background-color: var(--white);
     border-radius: .5rem;
     padding:2rem;
-    justify-self: center;
+    position: absolute;
     justify-content: center;
     overflow: auto;
  }

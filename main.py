@@ -33,25 +33,27 @@ def sign_out():
 
 @app.before_request
 def authenticate():
-    if 'user_id' not in session and request.endpoint in ['home']:
+    if 'user_id' not in session and request.endpoint == 'index':
         return redirect(url_for('sign_in_route'))
     
+@app.route('/', methods=['POST', 'GET'])
+def index():
+    return redirect(url_for('sign_in_route'))
     
 @app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
-        if user_record  == "elearnify.admin@nmamit.in":
+        user_id = session["user_id"]
+        user_record = db.collection("users").document(user_id).get().to_dict()
+        if user_record.get("email") == "elearnify.admin@nmamit.in.com":
             return redirect(url_for("admin_dashboard"))
         else:
             return redirect(url_for("public_dashboard"))
     else:
-        
         if request.method == 'POST':
-            
             try:
                 email = request.form.get('email')
                 password = request.form.get('password')
-                print(email, " ", password)
                 if not email or not password:
                     return 'Email and password are required.'
                 user_record = sign_in(email, password)
@@ -82,6 +84,11 @@ def public_style_css():
     return send_file("web/public/css/style.css")
 
 
+@app.route("/public/css/profile.css", methods=["GET"])
+def public_profile_css():
+    return send_file("web/public/css/profile.css")
+
+
 @app.route("/public/css/courses.css", methods=["GET"])
 def public_courses_css():
     return send_file("web/public/css/courses.css")
@@ -107,7 +114,7 @@ def admin_dashboard():
         return render_template("admin/home.html",)
     
 
-@app.route('/home', methods=["GET", "POST"])
+@app.route('/student/home', methods=["GET", "POST"])
 def public_dashboard():
     if 'user_id' in session:
         user_id = session["user_id"]
@@ -125,9 +132,26 @@ def profile_image_fetcher():
         bucket.blob(f"userprof/{user_id}.jpg").download_to_filename("pfp.jpg")
     except:
         return "error"
-    return send_file("pfp.jpg")
-    
-    
+    return send_file("pfp.jpg")    
+
+
+@app.route("/student/profile", methods = ["GET"])
+def profile_page():
+    if 'user_id' in session:
+        user_id = session["user_id"]
+        userDetails = db.collection("users").document(user_id).get().to_dict()
+        userData = {"name" : userDetails["name"],}
+    return render_template("public/profile.html",userData = userData)
+
+
+@app.route("/student/courses", methods = ["GET"])
+def courses_dashboard():
+    if 'user_id' in session:
+        user_id = session["user_id"]
+        userDetails = db.collection("users").document(user_id).get().to_dict()
+        userData = {"name" : userDetails["name"],}
+    return render_template("public/courses.html",userData = userData)
+
 
 if __name__ == "__main__":
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "MeOWmEWOnIGGAa")
