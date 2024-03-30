@@ -4,9 +4,8 @@ import os
 import pyrebase, firebase_auth, firebase_admin
 from firebase_admin import credentials, firestore, storage
 from flask import Flask, render_template, request, url_for, session, send_file, redirect
-
 import essentials.credentials
-import web.admin, web.public, web
+
 
 firebase_admin.initialize_app(credentials.Certificate(essentials.credentials.creds_for_firebase()))
 firebase = pyrebase.initialize_app(essentials.credentials.creds_for_pyrebase())
@@ -21,7 +20,8 @@ db = firestore.client()
 
 #userData = db.collection("users").document(session["user_id"]).get().to_dict()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static', static_folder='static')
+
 
 def sign_in(email, password):
     user_record = auth.sign_in_with_email_and_password(email, password)
@@ -67,36 +67,6 @@ def sign_in_route():
                 return render_template('/public/sign_in.html')
         else:
             return render_template('/public/sign_in.html')
-        
-
-@app.route("/public/css/sign-in.css", methods=["GET"])
-def public_index_css():
-    return send_file("web/public/css/sign_in.css")
-
-
-@app.route("/public/css/home.css", methods=["GET"])
-def public_home_css():
-    return send_file("web/public/css/home.css")
-
-
-@app.route("/public/css/style.css", methods=["GET"])
-def public_style_css():
-    return send_file("web/public/css/style.css")
-
-
-@app.route("/public/css/profile.css", methods=["GET"])
-def public_profile_css():
-    return send_file("web/public/css/profile.css")
-
-
-@app.route("/public/css/courses.css", methods=["GET"])
-def public_courses_css():
-    return send_file("web/public/css/courses.css")
-
-
-@app.route("/public/js/script.js", methods=["GET"])
-def public_script_js():
-    return send_file("web/public/js/script.js")
 
 
 @app.route('/sign-out')
