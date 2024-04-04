@@ -64,9 +64,9 @@ def sign_in_route():
                     session["user_id"] = user_record["localId"]
                     return redirect(url_for('public_dashboard'))
             except:
-                return render_template('/public/sign_in.html')
+                return render_template('index.html')
         else:
-            return render_template('/public/sign_in.html')
+            return render_template('index.html')
 
 
 @app.route('/sign-out')
