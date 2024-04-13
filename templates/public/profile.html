@@ -10,8 +10,8 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="/public/css/style.css">
-   <link rel="stylesheet" href="/public/css/profile.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
 
 </head>
 <body>
@@ -35,12 +35,11 @@
       </div>
 
       <div class="profile">
-         <img src="images/pfp.png" class="image" alt="">
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
          <h3 class="name" id="name">{{ userData.name }}</h3>
-         <a href="/student/profile" class="btn">view profile</a>
          <div class="flex-btn">
-            <a href="index.html" class="option-btn">login</a>
-            <a href="register.html" class="option-btn">register</a>
+            <a href="/student/profile" class="btn">Profile</a>
+            <a href="/sign-out" class="option-btn">Logout</a>
          </div>
       </div>
 
@@ -55,7 +54,7 @@
    </div>
 
    <div class="profile">
-      <img src="images/pfp.png" class="image" alt="">
+      <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
       <h3 class="name" id="name">{{ userData.name }}</h3>
       <a href="/student/profile" class="btn">view profile</a>
    </div>
@@ -77,14 +76,14 @@
    <div class="info">
 
       <div class="user">
-         <img src="images/pfp.png" alt="">
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture">
          <h3>student</h3>
          <a href="update.html" class="inline-btn">update profile</a>
       </div>
 
 </section>
 
-<script src="/public/js/script.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
    
 </body>

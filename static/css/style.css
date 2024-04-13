@@ -290,10 +290,10 @@ section{
 }
 
 .side-bar .profile .image{
-   height: 10rem;
-   width: 10rem;
+   height: auto;
+   max-width: 150px;
    border-radius: 50%;
-   object-fit: contain;
+   object-fit: cover;
    margin-bottom: 1rem;
 }
 

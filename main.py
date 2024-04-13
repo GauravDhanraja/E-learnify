@@ -92,17 +92,7 @@ def public_dashboard():
         userData = {"name" : userDetails["name"],}
         return render_template("public/home.html",userData = userData)
     else:
-        return redirect(url_for('sign_in_route'))
-    
-
-@app.route("/images/profilepic", methods = ["GET"])
-def profile_image_fetcher():
-    try:
-        user_id = session["user_id"]
-        bucket.blob(f"userprof/{user_id}.jpg").download_to_filename("pfp.jpg")
-    except:
-        return "error"
-    return send_file("pfp.jpg")    
+        return redirect(url_for('sign_in_route'))    
 
 
 @app.route("/student/profile", methods = ["GET"])
@@ -112,6 +102,16 @@ def profile_page():
         userDetails = db.collection("users").document(user_id).get().to_dict()
         userData = {"name" : userDetails["name"],}
     return render_template("public/profile.html",userData = userData)
+
+
+@app.route('/userprof/<filename>')
+def get_user_profile_pic(filename):
+    blob = bucket.blob(f'userprof/{filename}')
+    
+    temp_file = os.path.join(app.static_folder, 'images', filename)
+    blob.download_to_filename(temp_file)
+    
+    return send_file(temp_file, mimetype='image/png')
 
 
 @app.route("/student/courses", methods = ["GET"])

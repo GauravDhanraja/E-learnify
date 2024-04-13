@@ -35,12 +35,11 @@
       </div>
 
       <div class="profile">
-         <img src="images/profilepic" class="image" alt="">
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
          <h3 class="name" id="name">{{ userData.name }}</h3>
-         <a href="/student/profile" class="btn">view profile</a>
          <div class="flex-btn">
+            <a href="/student/profile" class="btn">Profile</a>
             <a href="/sign-out" class="option-btn">Logout</a>
-            <a href="register.html" class="option-btn">register</a>
          </div>
       </div>
 
@@ -55,7 +54,7 @@
    </div>
 
    <div class="profile">
-      <img src="images/profilepic" class="image" alt="">
+      <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
       <h3 class="name" id="name">{{ userData.name }}</h3>
       <a href="/student/profile" class="btn">view profile</a>
    </div>
