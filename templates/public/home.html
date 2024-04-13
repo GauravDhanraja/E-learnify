@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>home</title>
+   <title>Home</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
@@ -12,6 +12,7 @@
    <!-- custom css file link  -->
    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/courses.css') }}">
 
 </head>
 <body>
@@ -22,14 +23,8 @@
 
       <a href="/student/home" class="logo">E-learning</a>
 
-      <form action="search.html" method="post" class="search-form">
-         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
-         <button type="submit" class="fas fa-search"></button>
-      </form>
-
       <div class="icons">
          <div id="menu-btn" class="fas fa-bars"></div>
-         <div id="search-btn" class="fas fa-search"></div>
          <div id="user-btn" class="fas fa-user"></div>
          <div id="toggle-btn" class="fas fa-sun"></div>
       </div>
@@ -69,80 +64,125 @@
 
 </div>
 
-<section class="home-grid">
+<section class="courses">
 
-   <h1 class="heading">AI & ML</h1>
+   <h1 class="heading">courses</h1>
 
    <div class="box-container">
+
       <div class="box">
-         <h1 class="title">time table</h1>
-         <div class="tg-wrap"><table class="tg">
-            <thead>
-              <tr>
-                <th class="tg-wa1i">Time<br>Day<br></th>
-                <th class="tg-wa1i">9:00-9:55</th>
-                <th class="tg-wa1i">9:55-10:50</th>
-                <th class="tg-wa1i">11:10-12:05</th>
-                <th class="tg-wa1i">12:05-1:00</th>
-                <th class="tg-wa1i">1:00-1:55</th>
-                <th class="tg-wa1i">1:55-2:50</th>
-                <th class="tg-wa1i">2:50-3:40</th>
-                <th class="tg-wa1i">3:40-4:30</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="tg-wa1i">MON</td>
-                <td class="tg-nrix" colspan="2">CHEM LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix" rowspan="5"></td>
-                <td class="tg-nrix">ENG LAB</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">TUE</td>
-                <td class="tg-nrix" colspan="2">ADLD LAB</td>
-                <td class="tg-nrix">ENG</td>
-                <td class="tg-nrix">ADLD</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix">CPP</td>
-                <td class="tg-nrix">FAT</td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">WED</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix">COI</td>
-                <td class="tg-nrix" colspan="2">CPP LAB</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">THU</td>
-                <td class="tg-nrix">ENG</td>
-                <td class="tg-nrix">CPP</td>
-                <td class="tg-nrix" colspan="2">BEE LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">ADLD</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">FRI</td>
-                <td class="tg-nrix">BIO</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix" colspan="2">EV LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">EV</td>
-                <td class="tg-nrix">INTERNSHIP</td>
-              </tr>
-            </tbody>
-            </table></div>            
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+              
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/dsc-mths.png" alt="">
+            
+         </div>
+         <h3 class="title">Discrete Mathematics and Transform Techniques</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/chem.avif" alt="">
+            
+         </div>
+         <h3 class="title">Materials Chemistry for Computer System</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/digital.jpg" alt="">
+           
+         </div>
+         <h3 class="title">Applied Digital Logic Design (ADLD)</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/c.jpg" alt="">
+            
+         </div>
+         <h3 class="title">Introduction to c programming</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/elec.jpg" alt="">
+            
+         </div>
+         <h3 class="title">Basic Electrical Engineering</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/tech.jpg" alt="">
+            
+         </div>
+         <h3 class="title">Technical English</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
+      </div>
+
+      <div class="box">
+         <div class="tutor">
+            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+            <div class="info">
+               <h3>xyz</h3>
+               
+            </div>
+         </div>
+         <div class="thumb">
+            <img src="/static/images/constituiton.webp" alt="">
+            
+         </div>
+         <h3 class="title">Constitution of India</h3>
+         <a href="playlist.html" class="inline-btn">view</a>
       </div>
    </div>
-
-</section>
+   </section>
 
 <!-- custom js file link  -->
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

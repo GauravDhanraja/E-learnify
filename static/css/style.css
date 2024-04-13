@@ -157,37 +157,6 @@ section{
    padding-left: 30px;
 }
 
-.header .flex .search-form{
-   position: fixed;
-   left: 37vw;
-   width: 100%;
-   max-width: 26vw;
-   border-radius: .5rem;
-   background-color: var(--light-bg);
-   padding:1.5rem 2rem;
-   display: flex; 
-   align-self: center;
-   margin: auto;
-}
-
-.header .flex .search-form input{
-   width: 100%;
-   font-size: 1.8rem;
-   color:var(--black);
-   background:none;
-}
-
-.header .flex .search-form button{
-   background:none;
-   font-size: 2rem;
-   cursor: pointer;
-   color:var(--black);
-}
-
-.header .flex .search-form button:hover{
-   color: var(--main-color);
-}
-
 .header .flex .icons div{
    font-size: 2rem;
    color:var(--black);
@@ -244,10 +213,6 @@ section{
 .header .flex .profile .role{
    font-size: 1.8rem;
    color: var(--light-color);
-}
-
-#search-btn{
-   display: none;
 }
 
 .side-bar{
