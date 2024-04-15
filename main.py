@@ -39,34 +39,6 @@ def authenticate():
 @app.route('/', methods=['POST', 'GET'])
 def index():
     return redirect(url_for('sign_in_route'))
-    
-@app.route('/sign-in', methods=['POST', 'GET'])
-def sign_in_route():
-    if 'user_id' in session:
-        user_id = session["user_id"]
-        user_record = db.collection("users").document(user_id).get().to_dict()
-        if user_record.get("email") == "elearnify.admin@nmamit.in.com":
-            return redirect(url_for("admin_dashboard"))
-        else:
-            return redirect(url_for("public_dashboard"))
-    else:
-        if request.method == 'POST':
-            try:
-                email = request.form.get('email')
-                password = request.form.get('password')
-                if not email or not password:
-                    return 'Email and password are required.'
-                user_record = sign_in(email, password)
-                if user_record and email == "elearnify.admin@nmamit.in.com":
-                    session['user_id'] = user_record['localId']
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    session["user_id"] = user_record["localId"]
-                    return redirect(url_for('public_dashboard'))
-            except:
-                return render_template('index.html')
-        else:
-            return render_template('index.html')
 
 
 @app.route('/sign-out')
@@ -114,13 +86,42 @@ def get_user_profile_pic(filename):
     return send_file(temp_file, mimetype='image/png')
 
 
-@app.route("/student/courses", methods = ["GET"])
+@app.route("/student/announcements", methods = ["GET"])
 def courses_dashboard():
     if 'user_id' in session:
         user_id = session["user_id"]
         userDetails = db.collection("users").document(user_id).get().to_dict()
         userData = {"name" : userDetails["name"],}
-    return render_template("public/courses.html",userData = userData)
+    return render_template("public/announcements.html",userData = userData)
+
+
+@app.route('/sign-in', methods=['POST', 'GET'])
+def sign_in_route():
+    if 'user_id' in session:
+        user_id = session["user_id"]
+        user_record = db.collection("users").document(user_id).get().to_dict()
+        if user_record.get("email") == "elearnify.admin@nmamit.in.com":
+            return redirect(url_for("admin_dashboard"))
+        else:
+            return redirect(url_for("public_dashboard"))
+    else:
+        if request.method == 'POST':
+            try:
+                email = request.form.get('email')
+                password = request.form.get('password')
+                if not email or not password:
+                    return 'Email and password are required.'
+                user_record = sign_in(email, password)
+                if user_record and email == "elearnify.admin@nmamit.in.com":
+                    session['user_id'] = user_record['localId']
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    session["user_id"] = user_record["localId"]
+                    return redirect(url_for('public_dashboard'))
+            except:
+                return render_template('index.html')
+        else:
+            return render_template('index.html')
 
 
 if __name__ == "__main__":
