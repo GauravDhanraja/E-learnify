@@ -31,6 +31,28 @@ def sign_out():
     del session['user_id']
     return True
 
+def get_user_data():
+    user_id = session["user_id"]
+    data = db.collection('users').document(session['user_id']).get().to_dict()
+
+    return data
+
+def get_students_data():
+    user_id = session["user_id"]
+    data = db.collection('students').document(session['user_id']).get().to_dict()
+
+    return data
+
+def get_admin_emails():
+    admins = []
+    users_collection = db.collection('users').stream()
+    for user_doc in users_collection:
+        user_data = user_doc.to_dict()
+        if user_data.get('role') == 'admin':  # Assuming there's a field called 'role' indicating admin status
+            admins.append(user_data.get('email'))
+    return admins
+
+
 @app.before_request
 def authenticate():
     if 'user_id' not in session and request.endpoint == 'index':
@@ -59,8 +81,7 @@ def admin_dashboard():
 @app.route('/student/home', methods=["GET", "POST"])
 def public_dashboard():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
+        userDetails = get_students_data()
         userData = {"name" : userDetails["name"],}
         return render_template("public/home.html",userData = userData)
     else:
@@ -70,8 +91,7 @@ def public_dashboard():
 @app.route("/student/profile", methods = ["GET"])
 def profile_page():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
+        userDetails = get_students_data()
         userData = {"name" : userDetails["name"],}
     return render_template("public/profile.html",userData = userData)
 
@@ -89,8 +109,7 @@ def get_user_profile_pic(filename):
 @app.route("/student/announcements", methods = ["GET"])
 def courses_dashboard():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
+        userDetails = get_students_data()
         userData = {"name" : userDetails["name"],}
     return render_template("public/announcements.html",userData = userData)
 
@@ -100,7 +119,7 @@ def sign_in_route():
     if 'user_id' in session:
         user_id = session["user_id"]
         user_record = db.collection("users").document(user_id).get().to_dict()
-        if user_record.get("email") == "elearnify.admin@nmamit.in.com":
+        if user_record.get("email") in get_admin_emails():
             return redirect(url_for("admin_dashboard"))
         else:
             return redirect(url_for("public_dashboard"))
@@ -112,13 +131,14 @@ def sign_in_route():
                 if not email or not password:
                     return 'Email and password are required.'
                 user_record = sign_in(email, password)
-                if user_record and email == "elearnify.admin@nmamit.in.com":
+                if user_record and email in get_admin_emails():
                     session['user_id'] = user_record['localId']
                     return redirect(url_for('admin_dashboard'))
                 else:
                     session["user_id"] = user_record["localId"]
                     return redirect(url_for('public_dashboard'))
-            except:
+            except Exception as e:
+                print("Exception:", e)
                 return render_template('index.html')
         else:
             return render_template('index.html')
