@@ -31,26 +31,11 @@ def sign_out():
     del session['user_id']
     return True
 
-def get_user_data():
-    user_id = session["user_id"]
-    data = db.collection('users').document(session['user_id']).get().to_dict()
-
-    return data
-
 def get_students_data():
     user_id = session["user_id"]
     data = db.collection('students').document(session['user_id']).get().to_dict()
 
     return data
-
-def get_admin_emails():
-    admins = []
-    users_collection = db.collection('users').stream()
-    for user_doc in users_collection:
-        user_data = user_doc.to_dict()
-        if user_data.get('role') == 'admin':  # Assuming there's a field called 'role' indicating admin status
-            admins.append(user_data.get('email'))
-    return admins
 
 
 @app.before_request
@@ -70,13 +55,7 @@ def sign_out_route():
         return redirect(url_for('sign_in_route'))
     else:
         return 'Sign-out failed'
-    
-    
-@app.route('/admin/home', methods=["GET", "POST"])
-def admin_dashboard():
-    if request.method == 'GET':
-        return render_template("admin/home.html",)
-    
+
 
 @app.route('/student/home', methods=["GET", "POST"])
 def public_dashboard():
@@ -117,12 +96,7 @@ def courses_dashboard():
 @app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        user_record = db.collection("users").document(user_id).get().to_dict()
-        if user_record.get("email") in get_admin_emails():
-            return redirect(url_for("admin_dashboard"))
-        else:
-            return redirect(url_for("public_dashboard"))
+        return redirect(url_for("public_dashboard"))
     else:
         if request.method == 'POST':
             try:
@@ -131,12 +105,9 @@ def sign_in_route():
                 if not email or not password:
                     return 'Email and password are required.'
                 user_record = sign_in(email, password)
-                if user_record and email in get_admin_emails():
-                    session['user_id'] = user_record['localId']
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    session["user_id"] = user_record["localId"]
-                    return redirect(url_for('public_dashboard'))
+                # Store user ID in session
+                session["user_id"] = user_record["localId"]
+                return redirect(url_for('public_dashboard'))
             except Exception as e:
                 print("Exception:", e)
                 return render_template('index.html')
