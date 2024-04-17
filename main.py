@@ -67,6 +67,14 @@ def admin_dashboard():
         return redirect(url_for('sign_in_route'))
 
 
+@app.route("/admin/profile", methods = ["GET"])
+def admin_profile_page():
+    if 'user_id' in session:
+        userDetails = get_users_data()
+        userData = {"name" : userDetails["name"],}
+    return render_template("admin/profile.html",userData = userData)
+
+
 @app.route('/student/home', methods=["GET", "POST"])
 def public_dashboard():
     if 'user_id' in session:
@@ -78,7 +86,7 @@ def public_dashboard():
 
 
 @app.route("/student/profile", methods = ["GET"])
-def profile_page():
+def public_profile_page():
     if 'user_id' in session:
         userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
