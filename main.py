@@ -104,7 +104,6 @@ def courses_dashboard():
 
 
 @app.route('/sign-in', methods=['POST', 'GET'])
-@app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
         # Fetch user's role from session data
