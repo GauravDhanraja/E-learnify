@@ -31,9 +31,9 @@ def sign_out():
     del session['user_id']
     return True
 
-def get_students_data():
+def get_users_data():
     user_id = session["user_id"]
-    data = db.collection('students').document(session['user_id']).get().to_dict()
+    data = db.collection('users').document(session['user_id']).get().to_dict()
 
     return data
 
@@ -57,10 +57,20 @@ def sign_out_route():
         return 'Sign-out failed'
 
 
+@app.route('/admin/home')
+def admin_dashboard():
+    if 'user_id' in session:
+        userDetails = get_users_data()
+        userData = {"name" : userDetails["name"],}
+        return render_template("admin/home.html",userData = userData)
+    else:
+        return redirect(url_for('sign_in_route'))
+
+
 @app.route('/student/home', methods=["GET", "POST"])
 def public_dashboard():
     if 'user_id' in session:
-        userDetails = get_students_data()
+        userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
         return render_template("public/home.html",userData = userData)
     else:
@@ -70,7 +80,7 @@ def public_dashboard():
 @app.route("/student/profile", methods = ["GET"])
 def profile_page():
     if 'user_id' in session:
-        userDetails = get_students_data()
+        userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
     return render_template("public/profile.html",userData = userData)
 
@@ -88,31 +98,62 @@ def get_user_profile_pic(filename):
 @app.route("/student/announcements", methods = ["GET"])
 def courses_dashboard():
     if 'user_id' in session:
-        userDetails = get_students_data()
+        userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
     return render_template("public/announcements.html",userData = userData)
 
 
 @app.route('/sign-in', methods=['POST', 'GET'])
+@app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
-        return redirect(url_for("public_dashboard"))
-    else:
-        if request.method == 'POST':
-            try:
-                email = request.form.get('email')
-                password = request.form.get('password')
-                if not email or not password:
-                    return 'Email and password are required.'
-                user_record = sign_in(email, password)
-                # Store user ID in session
-                session["user_id"] = user_record["localId"]
+        # Fetch user's role from session data
+        user_id = session['user_id']
+        user_doc = db.collection('users').document(user_id).get()
+        if user_doc.exists:
+            user_data = user_doc.to_dict()
+            user_role = user_data.get('role', None)
+            
+            # Redirect based on user's role
+            if user_role == "student":
                 return redirect(url_for('public_dashboard'))
-            except Exception as e:
-                print("Exception:", e)
-                return render_template('index.html')
-        else:
+            elif user_role == "admin":
+                return redirect(url_for('admin_dashboard'))
+            else:
+                return 'You are not authorized to access this dashboard.'
+
+    # If user is not already authenticated or their role is not defined, proceed with sign-in
+    if request.method == 'POST':
+        try:
+            email = request.form.get('email')
+            password = request.form.get('password')
+            if not email or not password:
+                return 'Email and password are required.'
+            user_record = sign_in(email, password)
+            
+            # Fetch user's role from Firestore
+            user_doc = db.collection('users').document(user_record["localId"]).get()
+            if user_doc.exists:
+                user_data = user_doc.to_dict()
+                user_role = user_data.get('role', None)
+                
+                # Redirect based on user's role
+                if user_role == "student":
+                    session["user_id"] = user_record["localId"]
+                    return redirect(url_for('public_dashboard'))
+                elif user_role == "admin":
+                    session["user_id"] = user_record["localId"]
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    return 'You are not authorized to access this dashboard.'
+            else:
+                return 'User data not found.'
+
+        except Exception as e:
+            print("Exception:", e)
             return render_template('index.html')
+    else:
+        return render_template('index.html')
 
 
 if __name__ == "__main__":
