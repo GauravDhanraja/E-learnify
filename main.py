@@ -3,7 +3,7 @@ import datetime
 import os
 import pyrebase, firebase_auth, firebase_admin
 from firebase_admin import credentials, firestore, storage
-from flask import Flask, render_template, request, url_for, session, send_file, redirect
+from flask import Flask, render_template, request, url_for, session, send_file, redirect, make_response
 import essentials.credentials
 
 
@@ -110,57 +110,45 @@ def courses_dashboard():
         userData = {"name" : userDetails["name"],}
     return render_template("public/announcements.html",userData = userData)
 
+def authenticate_user(email, password):
+    if not email or not password:
+        return None, 'Email and password are required'
+    user_record = sign_in(email, password)
+    session["user_id"] = user_record["localId"]
+    return user_record, None
+
+def fetch_user_role(user_id):
+    user_doc = db.collection('users').document(user_id).get()
+    user_data = {}
+    if user_doc.exists:
+        user_data = user_doc.to_dict()
+    return user_data.get('role', None)
+
+def redirect_based_on_role(user_role, user_record):
+    if user_role == "student" or user_role == "admin":
+        session["user_id"] = user_record["localId"]
+        return redirect(url_for(f'{user_role}_dashboard'))
+    else:
+        return make_response('You are not authorized to access this dashboard.', 403)
 
 @app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
     if 'user_id' in session:
-        # Fetch user's role from session data
-        user_id = session['user_id']
-        user_doc = db.collection('users').document(user_id).get()
-        if user_doc.exists:
-            user_data = user_doc.to_dict()
-            user_role = user_data.get('role', None)
-            
-            # Redirect based on user's role
-            if user_role == "student":
-                return redirect(url_for('public_dashboard'))
-            elif user_role == "admin":
-                return redirect(url_for('admin_dashboard'))
-            else:
-                return 'You are not authorized to access this dashboard.'
+        user_role = fetch_user_role(session['user_id'])
+        return redirect_based_on_role(user_role)
 
-    # If user is not already authenticated or their role is not defined, proceed with sign-in
     if request.method == 'POST':
-        try:
-            email = request.form.get('email')
-            password = request.form.get('password')
-            if not email or not password:
-                return 'Email and password are required.'
-            user_record = sign_in(email, password)
-            
-            # Fetch user's role from Firestore
-            user_doc = db.collection('users').document(user_record["localId"]).get()
-            if user_doc.exists:
-                user_data = user_doc.to_dict()
-                user_role = user_data.get('role', None)
-                
-                # Redirect based on user's role
-                if user_role == "student":
-                    session["user_id"] = user_record["localId"]
-                    return redirect(url_for('public_dashboard'))
-                elif user_role == "admin":
-                    session["user_id"] = user_record["localId"]
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    return 'You are not authorized to access this dashboard.'
-            else:
-                return 'User data not found.'
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        user_record, error = authenticate_user(email, password)
+        if error:
+            return "An error occured during authentication. Please try again."
+        user_id = user_record["localId"]
+        user_role = fetch_user_role(user_id)
+        return redirect_based_on_role(user_role, user_record)
 
-        except Exception as e:
-            print("Exception:", e)
-            return render_template('index.html')
-    else:
-        return render_template('index.html')
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
