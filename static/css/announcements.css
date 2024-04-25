@@ -18,7 +18,6 @@
    width: 100%;
    align-items: center;
    gap: 1.5rem;
-   margin-bottom: 2.5rem;
 }
 
 .announcements .box-container .box .tutor h3{
@@ -37,3 +36,11 @@
    color: var(--black);
    padding-bottom: .5rem;
 }
+
+.announcements .box-container .box .text-box{
+   border: solid 1px var(--black);
+   border-radius: 5px;
+   font-size: 2rem;
+   color: var(--black);
+   padding: 1rem;
+}  

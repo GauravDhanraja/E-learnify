@@ -18,7 +18,6 @@ bucket = storage.bucket(app=app)
 
 db = firestore.client()
 
-#userData = db.collection("users").document(session["user_id"]).get().to_dict()
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 
@@ -76,7 +75,7 @@ def admin_profile_page():
 
 
 @app.route('/student/home', methods=["GET", "POST"])
-def public_dashboard():
+def student_dashboard():
     if 'user_id' in session:
         userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
@@ -86,7 +85,7 @@ def public_dashboard():
 
 
 @app.route("/student/profile", methods = ["GET"])
-def public_profile_page():
+def student_profile_page():
     if 'user_id' in session:
         userDetails = get_users_data()
         userData = {"name" : userDetails["name"],}
@@ -110,6 +109,7 @@ def courses_dashboard():
         userData = {"name" : userDetails["name"],}
     return render_template("public/announcements.html",userData = userData)
 
+
 def authenticate_user(email, password):
     if not email or not password:
         return None, 'Email and password are required'
@@ -130,6 +130,7 @@ def redirect_based_on_role(user_role, user_record):
         return redirect(url_for(f'{user_role}_dashboard'))
     else:
         return make_response('You are not authorized to access this dashboard.', 403)
+
 
 @app.route('/sign-in', methods=['POST', 'GET'])
 def sign_in_route():
