@@ -1,0 +1,39 @@
+
+.dashboard .box-container{
+    display: grid;
+    grid-template-rows: auto;
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+
+.dashboard .box-container .announcement{
+    display: flex;
+    border-radius: .5rem;
+    width: 50%;
+    height: auto;
+    background-color: var(--white);
+    padding: 2rem;
+}
+
+.dashboard .box-container .notes{
+    display: flex;
+    border-radius: .5rem;
+    width: 50%;
+    height: auto;
+    background-color: var(--white);
+    padding: 2rem;
+}
+
+.dashboard .box-container .notes h3{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: .2rem;
+}
+
+.dashboard .box-container .announcement h3{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: .2rem;
+}
+ 

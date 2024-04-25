@@ -11,8 +11,7 @@
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/courses.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_home.css') }}">
 
 </head>
 <body>
@@ -56,16 +55,30 @@
 
    <nav class="navbar">
       <a href="/admin/home"><i class="fas fa-home"></i><span>home</span></a>
-      <a href="/admin/announcements"><i class="fas fa-question"></i><span>announcement</span></a>
-      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></a>
       
    </nav>
 
 </div>
 
+<section class="dashboard">
+   
+   <h1 class="heading">Dashboard</h1>
+
+   <div class="box-container">
+
+      <div class="announcement">
+         <h3>Enter announcement here</h3>
+      </div>
+
+      <div class="notes">
+         <h3>Upload notes here</h3>
+      </div>
+
+   </div>
+
+</section>
 
 
-<!-- custom js file link  -->
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
    

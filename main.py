@@ -102,6 +102,35 @@ def get_user_profile_pic(filename):
     return send_file(temp_file, mimetype='image/png')
 
 
+def get_message(message_type):
+    doc_ref = db.collection(message_type).document('announcement')
+    doc = doc_ref.get().to_dict()
+
+    if doc is not None:
+        message = doc.get('message')
+        return message
+    else:
+        return "No message..."
+
+@app.route("/student/announcements", methods = ["GET"])
+def courses_dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login')) # or return a response with an error message
+    user_details = get_users_data()
+    if user_details is not None:
+        userData = {"name" : user_details["name"],}
+    else:
+        userData = {}
+    messages = {
+        'cpp_message': get_message('CPP'),
+        'mat_message': get_message('MAT'),
+        'adld_message': get_message('ADLD'),
+        'che_message': get_message('CHE'),
+        'bee_message': get_message('BEE'),
+        'eng_message': get_message('ENG'),
+        'coi_message': get_message('COI')
+    }
+    return render_template("public/announcements.html",userData = userData, **messages)
 
 
 def authenticate_user(email, password):
@@ -144,38 +173,6 @@ def sign_in_route():
         return redirect_based_on_role(user_role, user_record)
 
     return render_template('index.html')
-
-
-@app.route("/student/announcements", methods = ["GET"])
-def courses_dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('login')) # or return a response with an error message
-    user_details = get_users_data()
-    if user_details is not None:
-        userData = {"name" : user_details["name"],}
-    else:
-        userData = {}
-    messages = {
-        'cpp_message': get_message('CPP'),
-        'mat_message': get_message('MAT'),
-        'adld_message': get_message('ADLD'),
-        'che_message': get_message('CHE'),
-        'bee_message': get_message('BEE'),
-        'eng_message': get_message('ENG'),
-        'coi_message': get_message('COI')
-    }
-    return render_template("public/announcements.html",userData = userData, **messages)
-
-
-def get_message(message_type):
-    doc_ref = db.collection(message_type).document('announcement')
-    doc = doc_ref.get().to_dict()
-
-    if doc is not None:
-        message = doc.get('message')
-        return message
-    else:
-        return "No message..."
 
 
 if __name__ == "__main__":
