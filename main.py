@@ -59,8 +59,8 @@ def sign_out_route():
 @app.route('/admin/home')
 def admin_dashboard():
     if 'user_id' in session:
-        userDetails = get_users_data()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
         return render_template("admin/home.html",userData = userData)
     else:
         return redirect(url_for('sign_in_route'))
@@ -69,16 +69,16 @@ def admin_dashboard():
 @app.route("/admin/profile", methods = ["GET"])
 def admin_profile_page():
     if 'user_id' in session:
-        userDetails = get_users_data()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
     return render_template("admin/profile.html",userData = userData)
 
 
 @app.route('/student/home', methods=["GET", "POST"])
 def student_dashboard():
     if 'user_id' in session:
-        userDetails = get_users_data()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
         return render_template("public/home.html",userData = userData)
     else:
         return redirect(url_for('sign_in_route'))    
@@ -87,8 +87,8 @@ def student_dashboard():
 @app.route("/student/profile", methods = ["GET"])
 def student_profile_page():
     if 'user_id' in session:
-        userDetails = get_users_data()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
     return render_template("public/profile.html",userData = userData)
 
 
@@ -105,9 +105,12 @@ def get_user_profile_pic(filename):
 @app.route("/student/announcements", methods = ["GET"])
 def courses_dashboard():
     if 'user_id' in session:
-        userDetails = get_users_data()
-        userData = {"name" : userDetails["name"],}
-    return render_template("public/announcements.html",userData = userData)
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+        cpp_message = get_cpp_message()
+        mat_message = get_mat_message()
+        adld_message = get_adld_message()
+    return render_template("public/announcements.html",userData = userData, cpp_message = cpp_message, mat_message = mat_message, adld_message = adld_message)
 
 
 def authenticate_user(email, password):
@@ -151,6 +154,40 @@ def sign_in_route():
 
     return render_template('index.html')
 
+def get_cpp_message():
+    db = firestore.client()
+    doc_ref = db.collection('CPP').document('announcement')
+    doc = doc_ref.get().to_dict()
+
+    if doc is not None:
+        cpp_message = doc.get('message')
+        return cpp_message
+    else:
+        return "No message..."
+
+def get_mat_message():
+    db = firestore.client()
+    doc_ref = db.collection('MAT').document('announcement')
+    doc = doc_ref.get().to_dict()
+
+    if doc is not None:
+        mat_message = doc.get('message')
+        return mat_message
+    else:
+        return "No message..."
+
+def get_adld_message():
+    db = firestore.client()
+    doc_ref = db.collection('ADLD').document('announcement')
+    doc = doc_ref.get().to_dict()
+
+    if doc is not None:
+        adld_message = doc.get('message')
+        return adld_message
+    else:
+        return "No message..."
+
+      
 
 if __name__ == "__main__":
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "MeOWmEWOnIGGAa")
