@@ -112,6 +112,25 @@ def get_message(message_type):
     else:
         return "No message..."
 
+@app.route("/post-announcement", methods=["POST"])
+def update_message():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        user_name = user_details["name"]
+    else:
+        return "Unauthorized! Please log in to post announcements."
+
+    message = request.form.get("announcement-message")
+    if not message:
+        return "Announcement message cannot be empty."  
+
+    try:
+        ann_ref = db.collection(user_name).document('announcement')
+        ann_ref.update({'message': message})
+    except Exception as e:
+        return f"Failed to post announcement: {str(e)}"
+    return "Announcement submitted successfully!"  
+
 @app.route("/student/announcements", methods = ["GET"])
 def courses_dashboard():
     if 'user_id' not in session:
@@ -122,9 +141,9 @@ def courses_dashboard():
     else:
         userData = {}
     messages = {
+        'adld_message': get_message('ADLD'),
         'cpp_message': get_message('CPP'),
         'mat_message': get_message('MAT'),
-        'adld_message': get_message('ADLD'),
         'che_message': get_message('CHE'),
         'bee_message': get_message('BEE'),
         'eng_message': get_message('ENG'),
