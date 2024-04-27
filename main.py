@@ -74,15 +74,25 @@ def admin_profile_page():
     return render_template("admin/profile.html",userData = userData)
 
 
+courses = [
+    {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png"},
+    {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif"},
+    {"title": "Applied Digital Logic Design (ADLD)", "thumbnail": "/static/images/digital.jpg"},
+    {"title": "Introduction to C programming", "thumbnail": "/static/images/c.jpg"},
+    {"title": "Basic Electrical Engineering", "thumbnail": "/static/images/elec.jpg"},
+    {"title": "Technical English", "thumbnail": "/static/images/tech.jpg"},
+    {"title": "Constitution of India", "thumbnail": "/static/images/constituiton.webp"}
+]
+
 @app.route('/student/home', methods=["GET", "POST"])
 def student_dashboard():
     if 'user_id' in session:
         user_details = get_users_data()
         userData = {"name" : user_details["name"],}
-        return render_template("public/home.html",userData = userData)
+    
+        return render_template("public/home.html", userData=userData, courses=courses)
     else:
-        return redirect(url_for('sign_in_route'))    
-
+        return redirect(url_for('sign_in_route'))
 
 @app.route("/student/profile", methods = ["GET"])
 def student_profile_page():
@@ -90,6 +100,17 @@ def student_profile_page():
         user_details = get_users_data()
         userData = {"name" : user_details["name"],}
     return render_template("public/profile.html",userData = userData)
+
+
+@app.route("/student/courses/<int:course_id>", methods=["GET"])
+def student_course(course_id):
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+        
+        # Retrieve the specific course details based on the course ID
+        course = courses[course_id]
+        return render_template("public/courses.html", userData=userData, course=course)
 
 
 @app.route('/userprof/<filename>')
@@ -132,7 +153,7 @@ def update_message():
     return "Announcement submitted successfully!"  
 
 @app.route("/student/announcements", methods = ["GET"])
-def courses_dashboard():
+def announcement_dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login')) # or return a response with an error message
     user_details = get_users_data()
@@ -192,6 +213,38 @@ def sign_in_route():
         return redirect_based_on_role(user_role, user_record)
 
     return render_template('index.html')
+
+
+
+@app.route('/admin/upload', methods=['POST'])
+def upload_file():
+    uploaded_file = request.files['file']
+    if uploaded_file.filename == '':
+        return """ 
+        <script>
+            alert("No file selected for upload!");
+            window.history.back();
+        </script>
+        """
+
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        upload_path = f"subjects/{user_name}/public"
+
+        filename = uploaded_file.filename
+        blob = bucket.blob(upload_path + '/' + filename)
+        blob.upload_from_file(uploaded_file)
+
+        return """
+        <script>
+            alert("File uploaded successfully!");
+            window.history.back();
+        </script>
+        """ + remove_file_input_script
+    else:
+        return "User not found!", 404
 
 
 if __name__ == "__main__":

@@ -106,11 +106,13 @@ section{
 .btn,
 .inline-btn{
    background-color: var(--main-color);
+   color: var(--white);
 }
 
 .option-btn,
 .inline-option-btn{
    background-color:var(--orange);
+   color: var(--white);
 }
 
 .delete-btn,
@@ -188,6 +190,7 @@ section{
    transform: scale(0);
    transition: .2s linear;
    width: 30rem;
+   border: var(--border);
 }
 
 .header .flex .profile.active{
@@ -204,7 +207,7 @@ section{
 
 .header .flex .profile .name{
    font-size: 2rem;
-   color:var(--black);
+   color: var(--black);
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;

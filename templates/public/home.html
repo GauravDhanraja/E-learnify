@@ -63,122 +63,24 @@
 </div>
 
 <section class="courses">
-
    <h1 class="heading">courses</h1>
 
    <div class="box-container">
-
+      {% for course in courses %}
       <div class="box">
          <div class="tutor">
             <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
             <div class="info">
                <h3>xyz</h3>
-              
             </div>
          </div>
          <div class="thumb">
-            <img src="/static/images/dsc-mths.png" alt="">
-            
+            <img src="{{ course.thumbnail }}" alt="">
          </div>
-         <h3 class="title">Discrete Mathematics and Transform Techniques</h3>
-         <a href="courses.html" class="inline-btn">view</a>
+         <h3 class="title">{{ course.title }}</h3>
+         <a href="/student/courses/{{ loop.index0 }}" class="inline-btn">view</a>
       </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/chem.avif" alt="">
-            
-         </div>
-         <h3 class="title">Materials Chemistry for Computer System</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/digital.jpg" alt="">
-           
-         </div>
-         <h3 class="title">Applied Digital Logic Design (ADLD)</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/c.jpg" alt="">
-            
-         </div>
-         <h3 class="title">Introduction to C programming</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/elec.jpg" alt="">
-            
-         </div>
-         <h3 class="title">Basic Electrical Engineering</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/tech.jpg" alt="">
-            
-         </div>
-         <h3 class="title">Technical English</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
-
-      <div class="box">
-         <div class="tutor">
-            <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
-            <div class="info">
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-         <div class="thumb">
-            <img src="/static/images/constituiton.webp" alt="">
-            
-         </div>
-         <h3 class="title">Constitution of India</h3>
-         <a href="courses.html" class="inline-btn">view</a>
-      </div>
+      {% endfor %}
    </div>
 </section>
 
