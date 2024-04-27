@@ -4,14 +4,14 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>home</title>
+   <title>Home</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
    <!-- custom css file link  -->
    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_home.css') }}">
 
 </head>
 <body>
@@ -20,28 +20,20 @@
    
    <section class="flex">
 
-      <a href="home.html" class="logo">Elearnify</a>
-
-      <form action="search.html" method="post" class="search-form">
-         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
-         <button type="submit" class="fas fa-search"></button>
-      </form>
+      <a href="/admin/home" class="logo">E-learning</a>
 
       <div class="icons">
          <div id="menu-btn" class="fas fa-bars"></div>
-         <div id="search-btn" class="fas fa-search"></div>
          <div id="user-btn" class="fas fa-user"></div>
          <div id="toggle-btn" class="fas fa-sun"></div>
       </div>
 
       <div class="profile">
-         <img src="images/pfp.png" class="image" alt="">
-         <h3 class="name">Admin</h3>
-         
-         <a href="profile.html" class="btn">view profile</a>
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+         <h3 class="name" id="name">{{ userData.name }}</h3>
          <div class="flex-btn">
-            <a href="index.html" class="option-btn">login</a>
-            <a href="register.html" class="option-btn">register</a>
+            <a href="/admin/profile" class="btn">Profile</a>
+            <a href="/sign-out" class="option-btn">Logout</a>
          </div>
       </div>
 
@@ -56,98 +48,43 @@
    </div>
 
    <div class="profile">
-      <img src="images/pfp.png" class="image" alt="">
-      <h3 class="name">Admin</h3>
-      
-      <a href="profile.html" class="btn">view profile</a>
+      <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+      <h3 class="name" id="name">{{ userData.name }}</h3>
+      <a href="/admin/profile" class="btn">view profile</a>
    </div>
 
    <nav class="navbar">
-      <a href="home.html"><i class="fas fa-home"></i><span>home</span></a>
-      <a href="announcements.html"><i class="fas fa-question"></i><span>announcement</span></a>
-      <a href="notes.html"><i class="fas fa-graduation-cap"></i><span>upload</span></a>
-      <a href="students.html"><i class="fas fa-chalkboard-user"></i><span>students</span></a>
+      <a href="/admin/home"><i class="fas fa-home"></i><span>home</span></a>
       
    </nav>
 
 </div>
 
-<section class="home-grid">
-
-   <h1 class="heading">AI & ML</h1>
+<section class="dashboard">
+   
+   <h1 class="heading">Dashboard</h1>
 
    <div class="box-container">
-      <div class="box">
-         <h1 class="title">time table</h1>
-         <div class="tg-wrap"><table class="tg">
-            <thead>
-              <tr>
-                <th class="tg-wa1i">Time<br>Day<br></th>
-                <th class="tg-wa1i">9:00-9:55</th>
-                <th class="tg-wa1i">9:55-10:50</th>
-                <th class="tg-wa1i">11:10-12:05</th>
-                <th class="tg-wa1i">12:05-1:00</th>
-                <th class="tg-wa1i">1:00-1:55</th>
-                <th class="tg-wa1i">1:55-2:50</th>
-                <th class="tg-wa1i">2:50-3:40</th>
-                <th class="tg-wa1i">3:40-4:30</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="tg-wa1i">MON</td>
-                <td class="tg-nrix" colspan="2">CHEM LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix" rowspan="5"></td>
-                <td class="tg-nrix">ENG LAB</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">TUE</td>
-                <td class="tg-nrix" colspan="2">ADLD LAB</td>
-                <td class="tg-nrix">ENG</td>
-                <td class="tg-nrix">ADLD</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix">CPP</td>
-                <td class="tg-nrix">FAT</td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">WED</td>
-                <td class="tg-nrix">CHE</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix">COI</td>
-                <td class="tg-nrix" colspan="2">CPP LAB</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">THU</td>
-                <td class="tg-nrix">ENG</td>
-                <td class="tg-nrix">CPP</td>
-                <td class="tg-nrix" colspan="2">BEE LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">ADLD</td>
-                <td class="tg-nrix"></td>
-              </tr>
-              <tr>
-                <td class="tg-wa1i">FRI</td>
-                <td class="tg-nrix">BIO</td>
-                <td class="tg-nrix">BEE</td>
-                <td class="tg-nrix" colspan="2">EV LAB</td>
-                <td class="tg-nrix">MAT</td>
-                <td class="tg-nrix">EV</td>
-                <td class="tg-nrix">INTERNSHIP</td>
-              </tr>
-            </tbody>
-            </table></div>            
+
+      <div class="announcement">
+         <h3>Enter announcement here</h3>
+         <form action="/post-announcement" method="post">  <label for="announcement-message">Announcement Message:</label>
+           <textarea id="announcement-message" name="announcement-message" rows="4" cols="50"></textarea>
+           <br>
+           <button type="submit">Post</button>
+         </form>
+       </div>
+       
+
+      <div class="notes">
+         <h3>Upload notes here</h3>
       </div>
+
    </div>
 
 </section>
 
-<!-- custom js file link  -->
+
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
    

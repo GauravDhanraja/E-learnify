@@ -3,7 +3,7 @@ import datetime
 import os
 import pyrebase, firebase_auth, firebase_admin
 from firebase_admin import credentials, firestore, storage
-from flask import Flask, render_template, request, url_for, session, send_file, redirect
+from flask import Flask, render_template, request, url_for, session, send_file, redirect, make_response
 import essentials.credentials
 
 
@@ -18,7 +18,6 @@ bucket = storage.bucket(app=app)
 
 db = firestore.client()
 
-#userData = db.collection("users").document(session["user_id"]).get().to_dict()
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 
@@ -31,6 +30,13 @@ def sign_out():
     del session['user_id']
     return True
 
+def get_users_data():
+    user_id = session["user_id"]
+    data = db.collection('users').document(session['user_id']).get().to_dict()
+
+    return data
+
+
 @app.before_request
 def authenticate():
     if 'user_id' not in session and request.endpoint == 'index':
@@ -39,34 +45,6 @@ def authenticate():
 @app.route('/', methods=['POST', 'GET'])
 def index():
     return redirect(url_for('sign_in_route'))
-    
-@app.route('/sign-in', methods=['POST', 'GET'])
-def sign_in_route():
-    if 'user_id' in session:
-        user_id = session["user_id"]
-        user_record = db.collection("users").document(user_id).get().to_dict()
-        if user_record.get("email") == "elearnify.admin@nmamit.in.com":
-            return redirect(url_for("admin_dashboard"))
-        else:
-            return redirect(url_for("public_dashboard"))
-    else:
-        if request.method == 'POST':
-            try:
-                email = request.form.get('email')
-                password = request.form.get('password')
-                if not email or not password:
-                    return 'Email and password are required.'
-                user_record = sign_in(email, password)
-                if user_record and email == "elearnify.admin@nmamit.in.com":
-                    session['user_id'] = user_record['localId']
-                    return redirect(url_for('admin_dashboard'))
-                else:
-                    session["user_id"] = user_record["localId"]
-                    return redirect(url_for('public_dashboard'))
-            except:
-                return render_template('index.html')
-        else:
-            return render_template('index.html')
 
 
 @app.route('/sign-out')
@@ -76,31 +54,41 @@ def sign_out_route():
         return redirect(url_for('sign_in_route'))
     else:
         return 'Sign-out failed'
-    
-    
-@app.route('/admin/home', methods=["GET", "POST"])
+
+
+@app.route('/admin/home')
 def admin_dashboard():
-    if request.method == 'GET':
-        return render_template("admin/home.html",)
-    
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+        return render_template("admin/home.html",userData = userData)
+    else:
+        return redirect(url_for('sign_in_route'))
+
+
+@app.route("/admin/profile", methods = ["GET"])
+def admin_profile_page():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+    return render_template("admin/profile.html",userData = userData)
+
 
 @app.route('/student/home', methods=["GET", "POST"])
-def public_dashboard():
+def student_dashboard():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
         return render_template("public/home.html",userData = userData)
     else:
         return redirect(url_for('sign_in_route'))    
 
 
 @app.route("/student/profile", methods = ["GET"])
-def profile_page():
+def student_profile_page():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
-        userData = {"name" : userDetails["name"],}
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
     return render_template("public/profile.html",userData = userData)
 
 
@@ -114,13 +102,96 @@ def get_user_profile_pic(filename):
     return send_file(temp_file, mimetype='image/png')
 
 
-@app.route("/student/courses", methods = ["GET"])
-def courses_dashboard():
+def get_message(message_type):
+    doc_ref = db.collection(message_type).document('announcement')
+    doc = doc_ref.get().to_dict()
+
+    if doc is not None:
+        message = doc.get('message')
+        return message
+    else:
+        return "No message..."
+
+@app.route("/post-announcement", methods=["POST"])
+def update_message():
     if 'user_id' in session:
-        user_id = session["user_id"]
-        userDetails = db.collection("users").document(user_id).get().to_dict()
-        userData = {"name" : userDetails["name"],}
-    return render_template("public/courses.html",userData = userData)
+        user_details = get_users_data()
+        user_name = user_details["name"]
+    else:
+        return "Unauthorized! Please log in to post announcements."
+
+    message = request.form.get("announcement-message")
+    if not message:
+        return "Announcement message cannot be empty."  
+
+    try:
+        ann_ref = db.collection(user_name).document('announcement')
+        ann_ref.update({'message': message})
+    except Exception as e:
+        return f"Failed to post announcement: {str(e)}"
+    return "Announcement submitted successfully!"  
+
+@app.route("/student/announcements", methods = ["GET"])
+def courses_dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login')) # or return a response with an error message
+    user_details = get_users_data()
+    if user_details is not None:
+        userData = {"name" : user_details["name"],}
+    else:
+        userData = {}
+    messages = {
+        'adld_message': get_message('ADLD'),
+        'cpp_message': get_message('CPP'),
+        'mat_message': get_message('MAT'),
+        'che_message': get_message('CHE'),
+        'bee_message': get_message('BEE'),
+        'eng_message': get_message('ENG'),
+        'coi_message': get_message('COI')
+    }
+    return render_template("public/announcements.html",userData = userData, **messages)
+
+
+def authenticate_user(email, password):
+    if not email or not password:
+        return None, 'Email and password are required'
+    user_record = sign_in(email, password)
+    session["user_id"] = user_record["localId"]
+    return user_record, None
+
+def fetch_user_role(user_id):
+    user_doc = db.collection('users').document(user_id).get()
+    user_data = {}
+    if user_doc.exists:
+        user_data = user_doc.to_dict()
+    return user_data.get('role', None)
+
+def redirect_based_on_role(user_role, user_record):
+    if user_role == "student" or user_role == "admin":
+        session["user_id"] = user_record["localId"]
+        return redirect(url_for(f'{user_role}_dashboard'))
+    else:
+        return make_response('You are not authorized to access this dashboard.', 403)
+
+
+@app.route('/sign-in', methods=['POST', 'GET'])
+def sign_in_route():
+    if 'user_id' in session:
+        user_role = fetch_user_role(session['user_id'])
+        return redirect_based_on_role(user_role)
+
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        user_record, error = authenticate_user(email, password)
+        if error:
+            return "An error occured during authentication. Please try again."
+        user_id = user_record["localId"]
+        user_role = fetch_user_role(user_id)
+        return redirect_based_on_role(user_role, user_record)
+
+    return render_template('index.html')
 
 
 if __name__ == "__main__":

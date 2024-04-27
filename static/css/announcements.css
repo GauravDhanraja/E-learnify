@@ -1,0 +1,47 @@
+
+.announcements .box-container{
+   display: grid;
+   grid-template-rows: auto;
+   gap: 1.5rem;
+   align-items: flex-start;
+}
+
+.announcements .box-container .box{
+   display: flex;
+   border-radius: .5rem;
+   width: 100%;
+   height: auto;
+   background-color: var(--white);
+   padding: 2rem;
+}
+
+.announcements .box-container .box .tutor{
+   width: 100%;
+   align-items: center;
+   gap: 1.5rem;
+}
+
+.announcements .box-container .box .tutor h3{
+   font-size: 1.8rem;
+   color: var(--black);
+   margin-bottom: .2rem;
+}
+
+.announcements .box-container .box .tutor span{
+   font-size: 1.3rem;
+   color:var(--light-color);
+}
+
+.announcements .box-container .box .title{
+   font-size: 2rem;
+   color: var(--black);
+   padding-bottom: .5rem;
+}
+
+.announcements .box-container .box .text-box{
+   border: solid 1px var(--black);
+   border-radius: 5px;
+   font-size: 2rem;
+   color: var(--black);
+   padding: 1rem;
+}  
