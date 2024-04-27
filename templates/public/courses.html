@@ -10,38 +10,30 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/playlist.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/courses.css') }}">
 
 </head>
 <body>
 
 <header class="header">
-   
+
    <section class="flex">
 
-      <a href="home.html" class="logo">E-Learning</a>
-
-      <form action="search.html" method="post" class="search-form">
-         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
-         <button type="submit" class="fas fa-search"></button>
-      </form>
+      <a href="/student/home" class="logo">E-learning</a>
 
       <div class="icons">
          <div id="menu-btn" class="fas fa-bars"></div>
-         <div id="search-btn" class="fas fa-search"></div>
          <div id="user-btn" class="fas fa-user"></div>
          <div id="toggle-btn" class="fas fa-sun"></div>
       </div>
 
       <div class="profile">
-         <img src="images/pfp.png" class="image" alt="">
-         <h3 class="name">deanna</h3>
-         <p class="role">student</p>
-         <a href="profile.html" class="btn">view profile</a>
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+         <h3 class="name" id="name">{{ userData.name }}</h3>
          <div class="flex-btn">
-            <a href="index.html" class="option-btn">login</a>
-            <a href="register.html" class="option-btn">register</a>
+            <a href="/student/profile" class="btn">Profile</a>
+            <a href="/sign-out" class="option-btn">Logout</a>
          </div>
       </div>
 
@@ -56,74 +48,28 @@
    </div>
 
    <div class="profile">
-      <img src="images/pfp.png" class="image" alt="">
-      <h3 class="name">deanna</h3>
-      <p class="role">student</p>
-      <a href="profile.html" class="btn">view profile</a>
+      <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+      <h3 class="name" id="name">{{ userData.name }}</h3>
+      <a href="/student/profile" class="btn">view profile</a>
    </div>
 
    <nav class="navbar">
-      <a href="home.html"><i class="fas fa-home"></i><span>home</span></a>
-      <a href="about.html"><i class="fas fa-question"></i><span>about</span></a>
-      <a href="courses.html"><i class="fas fa-graduation-cap"></i><span>courses</span></a>
+      <a href="/student/home"><i class="fas fa-home"></i><span>home</span></a>
+      <a href="/student/announcements"><i class="fas fa-question"></i><span>announcement</span></a>
       <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></a>
       
    </nav>
 
 </div>
 
-<section class="playlist-details">
-
-   <h1 class="heading">playlist details</h1>
-
-   <div class="row">
-
-      <div class="column">
-         <form action="" method="post" class="save-playlist">
-            <button type="submit"><i class="far fa-bookmark"></i> <span>save playlist</span></button>
-         </form>
+<section class="course-details">
+   <h1 class="heading">{{ course.title }}</h1>
    
-         <div class="thumb">
-            <img src="images/dsc-mths.png" alt="">
-            <span>1 video</span>
-         </div>
-      </div>
-      <div class="column">
-         <div class="tutor">
-            <img src="images/pfp.png" alt="">
-            <div>
-               <h3>xyz</h3>
-               
-            </div>
-         </div>
-   
-         <div class="details">
-            <h3>Discrete Mathematics</h3>
-            <p>description.....</p>
-            <a href="teacher_profile.html" class="inline-btn">view profile</a>
-         </div>
-      </div>
-   </div>
-
 </section>
 
-<section class="playlist-videos">
 
-   <h1 class="heading">playlist videos</h1>
-
-   <div class="box-container">
-
-      <a class="box" href="watch-video.html">
-         <i class="fas fa-play"></i>
-         <img src="images/dsc-mths.png" alt="">
-         <h3>discrete mathematics (part 01)</h3>
-      </a>
-
-   </div>
-
-</section>
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
    
 </body>
