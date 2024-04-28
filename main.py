@@ -56,24 +56,6 @@ def sign_out_route():
         return 'Sign-out failed'
 
 
-@app.route('/admin/home')
-def admin_dashboard():
-    if 'user_id' in session:
-        user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
-        return render_template("admin/home.html",userData = userData)
-    else:
-        return redirect(url_for('sign_in_route'))
-
-
-@app.route("/admin/profile", methods = ["GET"])
-def admin_profile_page():
-    if 'user_id' in session:
-        user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
-    return render_template("admin/profile.html",userData = userData)
-
-
 courses = [
     {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png"},
     {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif"},
@@ -245,6 +227,42 @@ def upload_file():
         """ + remove_file_input_script
     else:
         return "User not found!", 404
+
+def show_uploaded_files():
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        upload_path = f"subjects/{user_name}/public"
+        blobs = list(bucket.list_blobs(prefix=f"subjects/{user_name}/public/"))
+        files = []
+        for blob in blobs:
+            file_data = {
+                'filename': blob.name.split('/')[-1],  # Extract filename from full path
+                'download_url': blob.public_url       # Get public URL for downloading
+            }
+            files.append(file_data)
+        return files
+    else:
+        return []  # Return an empty list if no files are found
+
+@app.route('/admin/home')
+def admin_dashboard():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+        files = show_uploaded_files()
+        return render_template("admin/home.html", userData=userData, files=files)
+    else:
+        return redirect(url_for('sign_in_route'))
+
+
+@app.route("/admin/profile", methods = ["GET"])
+def admin_profile_page():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+    return render_template("admin/profile.html",userData = userData)
 
 
 if __name__ == "__main__":
