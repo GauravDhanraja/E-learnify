@@ -37,15 +37,9 @@
 }
 
 
-.dashboard .box-container .announcement button{
-    justify-self: flex-start;
-    background-color: var(--orange);
-    color: var(--white);
-    margin-top: 1rem;
-    border-radius: 0.3rem;
-    height: auto;
-    width: 7rem;
-    padding: 0.5rem;
+.dashboard .box-container .announcement .option-btn{
+    width: 12rem;
+    justify-items: center;
 }
 
 
@@ -60,7 +54,6 @@
 }
 
 .dashboard .box-container .notes h3{
-    display: flex;
     font-size: 1.8rem;
     color: var(--black);
     margin-bottom: .2rem;
@@ -71,15 +64,9 @@
     margin-top: 1rem;
 }
 
-.dashboard .box-container .notes button{
-    justify-self: flex-start;
-    background-color: var(--orange);
-    color: var(--white);
-    margin-top: 1rem;
-    border-radius: 0.3rem;
-    height: auto;
-    width: 7rem;
-    padding: 0.5rem;
+.dashboard .box-container .notes .option-btn{
+    width: 12rem;
+    justify-items: center;
 }
 
 .dashboard .box-container .notes input[type="file"] {
@@ -89,3 +76,55 @@
     background-color: var(--white);
     color: var(--black);
 }
+
+.dashboard .box-container .uploaded-files{
+    display: grid;
+    grid-template-rows: auto;
+    border-radius: .5rem;
+    width: 60%;
+    height: auto;
+    background-color: var(--white);
+    padding: 2rem;
+}
+
+.dashboard .box-container .uploaded-files h3{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 1rem; 
+}
+
+.dashboard .box-container .uploaded-files .file-item{
+    display: inline;
+    margin-top: 1rem;
+}
+.dashboard .box-container .uploaded-files .file-item p{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin-bottom: 1rem; 
+}
+
+.dashboard .box-container .uploaded-files p{
+    font-size: 1.5rem;
+    color: var(--black);
+}
+
+/* Style download link */
+.dashboard .box-container .uploaded-files .file-item .btn {
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    text-decoration: none;
+    width: 12rem;
+}
+
+.dashboard .box-container .uploaded-files .file-item .delete {
+    background-color: var(--red);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+

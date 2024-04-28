@@ -1,0 +1,57 @@
+.course-details .box-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+.course-details .box-container .notes{
+    border-radius: .5rem;
+    width: auto;
+    height: auto;
+    background-color: var(--white);
+    padding: 2rem;
+}
+
+.course-details .box-container .notes h3{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+
+.course-details .box-container .notes .file-item{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.course-details .box-container .notes .file-item p{
+    font-size: 1.5rem;
+    color: var(--black);
+    align-self: center;
+}
+
+.course-details .notes .file-item a{
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin-top: 0;
+    height: fit-content;
+    width: min-content;
+    justify-content: center;
+}
+
+
+.course-details .box-container .assignment{
+    border-radius: .5rem;
+    width: auto;
+    height: auto;
+    background-color: var(--white);
+    padding: 2rem;
+}
+
+.course-details .box-container .assignment h3{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-bottom: 1rem;
+}
+

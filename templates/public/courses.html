@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>video playlist</title>
+   <title>Courses</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
@@ -54,9 +54,9 @@
    </div>
 
    <nav class="navbar">
-      <a href="/student/home"><i class="fas fa-home"></i><span>home</span></a>
-      <a href="/student/announcements"><i class="fas fa-question"></i><span>announcement</span></a>
-      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>teachers</span></a>
+      <a href="/student/home"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/student/announcements"><i class="fas fa-question"></i><span>Announcement</span></a>
+      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Teachers</span></a>
       
    </nav>
 
@@ -65,6 +65,25 @@
 <section class="course-details">
    <h1 class="heading">{{ course.title }}</h1>
    
+   <div class="box-container">
+      <div class="notes">
+         <h3>Notes</h3>
+         {% for note in course_notes %}
+             <div class="file-item">
+                 <p>{{ note.filename }}</p>
+                 {% if note.filename %}
+                 <a class="btn" href="{{ url_for('download_course_notes', course_name=course.name, filename=note.filename) }}">Download</a>
+                 {% endif %}
+             </div>
+         {% endfor %}
+      </div>
+   
+      <div class="assignment">
+            <h3>Assignement</h3>
+      </div>
+
+   </div>
+
 </section>
 
 

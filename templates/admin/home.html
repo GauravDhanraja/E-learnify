@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Home</title>
+   <title>Dashboard</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
@@ -54,7 +54,8 @@
    </div>
 
    <nav class="navbar">
-      <a href="/admin/home"><i class="fas fa-home"></i><span>home</span></a>
+      <a href="/admin/home"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Students</span></a>
       
    </nav>
 
@@ -71,7 +72,7 @@
          <form action="/post-announcement" method="post">
            <textarea id="announcement-message" name="announcement-message" rows="4" cols="85"></textarea>
            <br>
-           <button type="submit">Post</button>
+           <button class="option-btn" type="submit">Post</button>
          </form>
       </div>
        
@@ -80,13 +81,45 @@
          <h3>Upload notes here</h3>
          <form action="/admin/upload" method="post" enctype="multipart/form-data">
            <input type="file" name="file" accept=".pdf, .doc, .docx">
-           <button type="submit">Upload</button>
+           <button class="option-btn" type="submit">Upload</button>
          </form>
       </div>
 
-      <div class="uploaded-files"></div>
+      <div class="uploaded-files">
+         <h3>Uploaded notes</h3>
+         {% for file in files %}
+             <div class="file-item">
+                 <p>{{ file.filename }}</p>
+                 {% if file.filename %}
+                 <form action="/admin/download_file" method="post">
+                     <input type="hidden" name="filename" value="{{ file.filename }}">
+                     <button class="btn" type="submit">Download</button>
+                 </form>
+                 <form action="/admin/delete_file" method="post">
+                     <input type="hidden" name="filename" value="{{ file.filename }}">
+                     <button class="delete" type="submit">Delete</button>
+                 </form>
+                 {% endif %}
+             </div>
+         {% endfor %}
+     </div>        
 
    </div>
+
+   <script>
+      function downloadFile(filename) {
+          var form = document.createElement("form");
+          form.action = "/admin/download_file";
+          form.method = "post";
+          var input = document.createElement("input");
+          input.type = "hidden";
+          input.name = "filename";
+          input.value = filename;
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
+      }
+  </script>
 
 </section>
 

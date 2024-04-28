@@ -1,5 +1,6 @@
 
-import datetime
+from datetime import datetime, timedelta
+from google.cloud import storage
 import os
 import pyrebase, firebase_auth, firebase_admin
 from firebase_admin import credentials, firestore, storage
@@ -56,32 +57,14 @@ def sign_out_route():
         return 'Sign-out failed'
 
 
-@app.route('/admin/home')
-def admin_dashboard():
-    if 'user_id' in session:
-        user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
-        return render_template("admin/home.html",userData = userData)
-    else:
-        return redirect(url_for('sign_in_route'))
-
-
-@app.route("/admin/profile", methods = ["GET"])
-def admin_profile_page():
-    if 'user_id' in session:
-        user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
-    return render_template("admin/profile.html",userData = userData)
-
-
 courses = [
-    {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png"},
-    {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif"},
-    {"title": "Applied Digital Logic Design (ADLD)", "thumbnail": "/static/images/digital.jpg"},
-    {"title": "Introduction to C programming", "thumbnail": "/static/images/c.jpg"},
-    {"title": "Basic Electrical Engineering", "thumbnail": "/static/images/elec.jpg"},
-    {"title": "Technical English", "thumbnail": "/static/images/tech.jpg"},
-    {"title": "Constitution of India", "thumbnail": "/static/images/constituiton.webp"}
+    {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png", "name": "MAT"},
+    {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif", "name": "CHE"},
+    {"title": "Applied Digital Logic Design (ADLD)", "thumbnail": "/static/images/digital.jpg", "name": "ADLD"},
+    {"title": "Introduction to C programming", "thumbnail": "/static/images/c.jpg", "name": "CPP"},
+    {"title": "Basic Electrical Engineering", "thumbnail": "/static/images/elec.jpg", "name": "BEE"},
+    {"title": "Technical English", "thumbnail": "/static/images/tech.jpg", "name": "ENG"},
+    {"title": "Constitution of India", "thumbnail": "/static/images/constituiton.webp", "name": "COI"}
 ]
 
 @app.route('/student/home', methods=["GET", "POST"])
@@ -102,15 +85,53 @@ def student_profile_page():
     return render_template("public/profile.html",userData = userData)
 
 
-@app.route("/student/courses/<int:course_id>", methods=["GET"])
+@app.route("/student/courses/<int:course_id>", methods = ["GET"])
 def student_course(course_id):
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name": user_details["name"]}
         
-        # Retrieve the specific course details based on the course ID
         course = courses[course_id]
-        return render_template("public/courses.html", userData=userData, course=course)
+        course_notes = show_course_notes(course['name'])
+        
+        return render_template("public/courses.html", userData=userData, course=course, course_notes=course_notes)
+
+@app.route("/student/download_file/<course_name>/<filename>", methods = ['GET'])
+def download_course_notes(course_name, filename):
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name": user_details["name"]}
+        
+        course = next((c for c in courses if c['name'] == course_name), None)
+        if course:
+                blob = bucket.blob(f'subjects/{course_name}/public/{filename}')
+                if blob.exists():
+                    expiration_time = datetime.utcnow() + timedelta(minutes=60)
+                    download_url = blob.generate_signed_url(expiration=expiration_time)
+                    return redirect(download_url)
+                else:
+                    return "File not found", 404
+        return "Course not found", 404
+    else:
+        return "Unauthorized", 401
+
+def show_course_notes(course_name):  
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    course = next((c for c in courses if c['name'] == course_name), None)
+    if course:
+        upload_path = f"subjects/{course_name}/public"  
+        blobs = list(bucket.list_blobs(prefix=f"subjects/{course_name}/public/"))
+        files = []
+        for blob in blobs:
+            file_data = {
+                'filename': blob.name.split('/')[-1],
+                'download_url': blob.public_url
+            }
+            files.append(file_data)
+        return files
+    else:
+        return []
 
 
 @app.route('/userprof/<filename>')
@@ -237,14 +258,75 @@ def upload_file():
         blob = bucket.blob(upload_path + '/' + filename)
         blob.upload_from_file(uploaded_file)
 
-        return """
-        <script>
-            alert("File uploaded successfully!");
-            window.history.back();
-        </script>
-        """ + remove_file_input_script
+        return redirect(url_for("admin_dashboard"))
     else:
         return "User not found!", 404
+
+@app.route('/admin/delete_file', methods = ['POST'])
+def delete_file():
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        filename = request.form['filename']
+        blob_name = f"subjects/{user_name}/public/{filename}"
+        blob = bucket.blob(blob_name)
+        blob.delete()
+        return redirect(url_for("admin_dashboard"))
+
+@app.route('/admin/download_file', methods=['POST'])
+def download_file():
+    filename = request.form['filename']
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        blob_name = f"subjects/{user_name}/public/{filename}"
+        blob = bucket.blob(blob_name)
+        if blob.exists():
+            expiration_time = datetime.utcnow() + timedelta(minutes=60)  # expires in 1 hour
+            signed_url = blob.generate_signed_url(expiration = expiration_time, method='GET')
+            return redirect(signed_url)
+        else:
+            return "File not found!", 404
+    else:
+        return "User not found!", 404
+
+def show_uploaded_files():
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        upload_path = f"subjects/{user_name}/public"
+        blobs = list(bucket.list_blobs(prefix=f"subjects/{user_name}/public/"))
+        files = []
+        for blob in blobs:
+            file_data = {
+                'filename': blob.name.split('/')[-1],
+                'download_url': blob.public_url
+            }
+            files.append(file_data)
+        return files
+    else:
+        return []
+
+@app.route('/admin/home')
+def admin_dashboard():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+        files = show_uploaded_files()
+        return render_template("admin/home.html", userData = userData, files = files)
+    else:
+        return redirect(url_for('sign_in_route'))
+
+
+@app.route("/admin/profile", methods = ["GET"])
+def admin_profile_page():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name" : user_details["name"],}
+    return render_template("admin/profile.html",userData = userData)
 
 
 if __name__ == "__main__":

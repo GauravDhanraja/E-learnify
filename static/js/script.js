@@ -55,3 +55,18 @@ window.onscroll = () =>{
       body.classList.remove('active');
    }
 }
+
+document.querySelectorAll('.delete-btn').forEach(function(button) {
+   button.addEventListener('click', function() {
+       // Get filename from data attribute
+       var filename = this.getAttribute('data-filename');
+
+       // Call deleteFile function with filename
+       deleteFile(filename);
+   });
+});
+
+// Function to delete file
+function deleteFile(filename) {
+   // Implement logic to delete file (e.g., using AJAX or form submission)
+}
