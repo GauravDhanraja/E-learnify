@@ -1,5 +1,6 @@
 
-import datetime
+from datetime import datetime, timedelta
+from google.cloud import storage
 import os
 import pyrebase, firebase_auth, firebase_admin
 from firebase_admin import credentials, firestore, storage
@@ -223,7 +224,7 @@ def upload_file():
     else:
         return "User not found!", 404
 
-@app.route('/admin/delete_file', methods=['POST'])
+@app.route('/admin/delete_file', methods = ['POST'])
 def delete_file():
     user_uid = session.get('user_uid')
     user_details = get_users_data()
@@ -235,6 +236,24 @@ def delete_file():
         blob.delete()
         return redirect(url_for("admin_dashboard"))
 
+@app.route('/admin/download_file', methods=['POST'])
+def download_file():
+    filename = request.form['filename']
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        blob_name = f"subjects/{user_name}/public/{filename}"
+        blob = bucket.blob(blob_name)
+        if blob.exists():
+            expiration_time = datetime.utcnow() + timedelta(minutes=60)  # expires in 1 hour
+            signed_url = blob.generate_signed_url(expiration=expiration_time, method='GET')
+            return redirect(signed_url)
+        else:
+            return "File not found!", 404
+    else:
+        return "User not found!", 404
+
 def show_uploaded_files():
     user_uid = session.get('user_uid')
     user_details = get_users_data()
@@ -245,13 +264,13 @@ def show_uploaded_files():
         files = []
         for blob in blobs:
             file_data = {
-                'filename': blob.name.split('/')[-1],  # Extract filename from full path
-                'download_url': blob.public_url       # Get public URL for downloading
+                'filename': blob.name.split('/')[-1],
+                'download_url': blob.public_url
             }
             files.append(file_data)
         return files
     else:
-        return []  # Return an empty list if no files are found
+        return []
 
 @app.route('/admin/home')
 def admin_dashboard():
@@ -259,7 +278,7 @@ def admin_dashboard():
         user_details = get_users_data()
         userData = {"name" : user_details["name"],}
         files = show_uploaded_files()
-        return render_template("admin/home.html", userData=userData, files=files)
+        return render_template("admin/home.html", userData = userData, files = files)
     else:
         return redirect(url_for('sign_in_route'))
 
