@@ -90,7 +90,7 @@
              <div class="file-item">
                  <p>{{ file.filename }}</p>
                  {% if file.filename %}
-                 <p class="flex-btn"><a href="{{ file.download_url }}">Download</a></p>
+                 <p class="btn"><a href="{{ file.download_url }}">Download</a></p>
                  <form action="/admin/delete_file" method="post">
                      <input type="hidden" name="filename" value="{{ file.filename }}">
                      <button type="submit">Delete</button>

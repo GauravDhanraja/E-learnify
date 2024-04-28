@@ -94,6 +94,11 @@
 }
 
 .dashboard .box-container .uploaded-files .file-item{
+    display: inline;
+}
+.dashboard .box-container .uploaded-files .file-item p{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
     margin-bottom: 1rem; 
 }
 
@@ -103,16 +108,22 @@
 }
 
 /* Style download link */
-.dashboard .box-container .uploaded-files a { 
-    text-decoration: none; 
-    margin-right: 1rem
+.dashboard .box-container .uploaded-files .btn,
+.dashboard .box-container .uploaded-files .file-item a {
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
 }
 
-/* Style delete button */
 .dashboard .box-container .uploaded-files button {
-    background-color: var(--red); 
-    color: var(--white); 
-    padding: 0.5rem 1rem; 
-    border-radius: 0.3rem; 
-    cursor: pointer; 
+    background-color: var(--red);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-bottom: 2.5rem;
 }
+
