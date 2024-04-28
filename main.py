@@ -85,26 +85,42 @@ def student_profile_page():
     return render_template("public/profile.html",userData = userData)
 
 
-@app.route("/student/courses/<int:course_id>", methods=["GET"])
+@app.route("/student/courses/<int:course_id>", methods = ["GET"])
 def student_course(course_id):
     if 'user_id' in session:
         user_details = get_users_data()
         userData = {"name": user_details["name"]}
         
-        # Retrieve the specific course details based on the course ID
         course = courses[course_id]
-        
-        # Fetch the course notes
-        course_notes = show_course_notes(course['name'])  # Pass course name instead of course ID
+        course_notes = show_course_notes(course['name'])
         
         return render_template("public/courses.html", userData=userData, course=course, course_notes=course_notes)
 
-def show_course_notes(course_name):  # Modify the function signature to accept course name
+@app.route("/student/download_file/<course_name>/<filename>", methods = ['GET'])
+def download_course_notes(course_name, filename):
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name": user_details["name"]}
+        
+        course = next((c for c in courses if c['name'] == course_name), None)
+        if course:
+                blob = bucket.blob(f'subjects/{course_name}/public/{filename}')
+                if blob.exists():
+                    expiration_time = datetime.utcnow() + timedelta(minutes=60)
+                    download_url = blob.generate_signed_url(expiration=expiration_time)
+                    return redirect(download_url)
+                else:
+                    return "File not found", 404
+        return "Course not found", 404
+    else:
+        return "Unauthorized", 401
+
+def show_course_notes(course_name):  
     user_uid = session.get('user_uid')
     user_details = get_users_data()
     course = next((c for c in courses if c['name'] == course_name), None)
     if course:
-        upload_path = f"subjects/{course_name}/public"  # Use course name instead of course ID
+        upload_path = f"subjects/{course_name}/public"  
         blobs = list(bucket.list_blobs(prefix=f"subjects/{course_name}/public/"))
         files = []
         for blob in blobs:

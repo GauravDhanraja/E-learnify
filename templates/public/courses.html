@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>video playlist</title>
+   <title>Courses</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
@@ -69,14 +69,14 @@
       <div class="notes">
          <h3>Notes</h3>
          {% for note in course_notes %}
-               <div class="file-item">
-                     <p>{{ note.filename }}</p>
-                     {% if note.filename %}
-                     <a href="{{ note.download_url }}" class="btn" target="_blank">Download</a>
-                     {% endif %}
-               </div>
+             <div class="file-item">
+                 <p>{{ note.filename }}</p>
+                 {% if note.filename %}
+                 <a class="btn" href="{{ url_for('download_course_notes', course_name=course.name, filename=note.filename) }}">Download</a>
+                 {% endif %}
+             </div>
          {% endfor %}
-      </div>  
+      </div>
    
       <div class="assignment">
             <h3>Assignement</h3>
