@@ -219,14 +219,21 @@ def upload_file():
         blob = bucket.blob(upload_path + '/' + filename)
         blob.upload_from_file(uploaded_file)
 
-        return """
-        <script>
-            alert("File uploaded successfully!");
-            window.history.back();
-        </script>
-        """ + remove_file_input_script
+        return redirect(url_for("admin_dashboard"))
     else:
         return "User not found!", 404
+
+@app.route('/admin/delete_file', methods=['POST'])
+def delete_file():
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        filename = request.form['filename']
+        blob_name = f"subjects/{user_name}/public/{filename}"
+        blob = bucket.blob(blob_name)
+        blob.delete()
+        return redirect(url_for("admin_dashboard"))
 
 def show_uploaded_files():
     user_uid = session.get('user_uid')
