@@ -65,6 +65,25 @@
 <section class="course-details">
    <h1 class="heading">{{ course.title }}</h1>
    
+   <div class="box-container">
+      <div class="notes">
+         <h3>Notes</h3>
+         {% for note in course_notes %}
+               <div class="file-item">
+                     <p>{{ note.filename }}</p>
+                     {% if note.filename %}
+                     <a href="{{ note.download_url }}" class="btn" target="_blank">Download</a>
+                     {% endif %}
+               </div>
+         {% endfor %}
+      </div>  
+   
+      <div class="assignment">
+            <h3>Assignement</h3>
+      </div>
+
+   </div>
+
 </section>
 
 

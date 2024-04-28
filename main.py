@@ -58,13 +58,13 @@ def sign_out_route():
 
 
 courses = [
-    {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png"},
-    {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif"},
-    {"title": "Applied Digital Logic Design (ADLD)", "thumbnail": "/static/images/digital.jpg"},
-    {"title": "Introduction to C programming", "thumbnail": "/static/images/c.jpg"},
-    {"title": "Basic Electrical Engineering", "thumbnail": "/static/images/elec.jpg"},
-    {"title": "Technical English", "thumbnail": "/static/images/tech.jpg"},
-    {"title": "Constitution of India", "thumbnail": "/static/images/constituiton.webp"}
+    {"title": "Discrete Mathematics and Transform Techniques", "thumbnail": "/static/images/dsc-mths.png", "name": "MAT"},
+    {"title": "Materials Chemistry for Computer System", "thumbnail": "/static/images/chem.avif", "name": "CHE"},
+    {"title": "Applied Digital Logic Design (ADLD)", "thumbnail": "/static/images/digital.jpg", "name": "ADLD"},
+    {"title": "Introduction to C programming", "thumbnail": "/static/images/c.jpg", "name": "CPP"},
+    {"title": "Basic Electrical Engineering", "thumbnail": "/static/images/elec.jpg", "name": "BEE"},
+    {"title": "Technical English", "thumbnail": "/static/images/tech.jpg", "name": "ENG"},
+    {"title": "Constitution of India", "thumbnail": "/static/images/constituiton.webp", "name": "COI"}
 ]
 
 @app.route('/student/home', methods=["GET", "POST"])
@@ -89,11 +89,33 @@ def student_profile_page():
 def student_course(course_id):
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name": user_details["name"]}
         
         # Retrieve the specific course details based on the course ID
         course = courses[course_id]
-        return render_template("public/courses.html", userData=userData, course=course)
+        
+        # Fetch the course notes
+        course_notes = show_course_notes(course['name'])  # Pass course name instead of course ID
+        
+        return render_template("public/courses.html", userData=userData, course=course, course_notes=course_notes)
+
+def show_course_notes(course_name):  # Modify the function signature to accept course name
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    course = next((c for c in courses if c['name'] == course_name), None)
+    if course:
+        upload_path = f"subjects/{course_name}/public"  # Use course name instead of course ID
+        blobs = list(bucket.list_blobs(prefix=f"subjects/{course_name}/public/"))
+        files = []
+        for blob in blobs:
+            file_data = {
+                'filename': blob.name.split('/')[-1],
+                'download_url': blob.public_url
+            }
+            files.append(file_data)
+        return files
+    else:
+        return []
 
 
 @app.route('/userprof/<filename>')
@@ -247,7 +269,7 @@ def download_file():
         blob = bucket.blob(blob_name)
         if blob.exists():
             expiration_time = datetime.utcnow() + timedelta(minutes=60)  # expires in 1 hour
-            signed_url = blob.generate_signed_url(expiration=expiration_time, method='GET')
+            signed_url = blob.generate_signed_url(expiration = expiration_time, method='GET')
             return redirect(signed_url)
         else:
             return "File not found!", 404
