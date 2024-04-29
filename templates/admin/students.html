@@ -4,14 +4,14 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>teachers</title>
+   <title>Students</title>
 
    <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="css/style.css">
-   <link rel="stylesheet" href="css/teacher.css">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
 
 </head>
 <body>
@@ -20,28 +20,20 @@
    
    <section class="flex">
 
-      <a href="home.html" class="logo">E-Learning</a>
+      <a href="/admin/home" class="logo">E-learning</a>
 
-      <form action="search.html" method="post" class="search-form">
-         <input type="text" name="search_box" required placeholder="search courses..." maxlength="100">
-         <button type="submit" class="fas fa-search"></button>
-      </form>
-
-      <div class="icons">
+      <div class="icons">  
          <div id="menu-btn" class="fas fa-bars"></div>
-         <div id="search-btn" class="fas fa-search"></div>
          <div id="user-btn" class="fas fa-user"></div>
          <div id="toggle-btn" class="fas fa-sun"></div>
       </div>
 
       <div class="profile">
-         <img src="images/pfp.png" class="image" alt="">
-         <h3 class="name">Admin</h3>
-         
-         <a href="profile.html" class="btn">view profile</a>
+         <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+         <h3 class="name" id="name">{{ userData.name }}</h3>
          <div class="flex-btn">
-            <a href="index.html" class="option-btn">login</a>
-            <a href="register.html" class="option-btn">register</a>
+            <a href="/admin/profile" class="btn">Profile</a>
+            <a href="/sign-out" class="option-btn">Logout</a>
          </div>
       </div>
 
@@ -56,18 +48,15 @@
    </div>
 
    <div class="profile">
-      <img src="images/pfp.png" class="image" alt="">
-      <h3 class="name">Admin</h3>
-      
-      <a href="profile.html" class="btn">view profile</a>
+      <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture" style="max-width: 150px; height: auto;">
+      <h3 class="name" id="name">{{ userData.name }}</h3>
+      <a href="/admin/profile" class="btn">view profile</a>
    </div>
 
    <nav class="navbar">
-      <a href="home.html"><i class="fas fa-home"></i><span>home</span></a>
-      <a href="announcements.html"><i class="fas fa-question"></i><span>announcement</span></a>
-      <a href="notes.html"><i class="fas fa-graduation-cap"></i><span>upload</span></a>
-      <a href="students.html"><i class="fas fa-chalkboard-user"></i><span>students</span></a>
-    
+      <a href="/admin/home"><i class="fas fa-home"></i><span>Home</span></a>
+      <a href="/admin/students"><i class="fas fa-chalkboard-user"></i><span>Students</span></a>
+      
    </nav>
 
 </div>
@@ -76,40 +65,14 @@
 
    <h1 class="heading">Students</h1>
 
-   <form action="" method="post" class="search-tutor">
-      <input type="text" name="search_box" placeholder="search tutors..." required maxlength="100">
-      <button type="submit" class="fas fa-search" name="search_tutor"></button>
-   </form>
-
    <div class="box-container">
 
-    <!--  <div class="box offer">
-         <h3>become a tutor</h3>
-         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, itaque ipsam fuga ex et aliquam.</p>
-         <a href="register.html" class="inline-btn">get started</a>
-      </div>-->
 
-      
 
 </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- custom js file link  -->
-<script src="js/script2.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
    
 </body>

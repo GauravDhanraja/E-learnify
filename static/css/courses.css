@@ -55,3 +55,20 @@
     margin-bottom: 1rem;
 }
 
+.course-details .box-container .assignment form{
+    display: grid;
+    margin-top: 1rem;
+}
+
+.course-details .box-container .assignment .option-btn{
+    width: 12rem;
+    justify-items: center;
+}
+
+.course-details .box-container .assignment input[type="file"] {
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--black);
+    background-color: var(--white);
+    color: var(--black);
+}

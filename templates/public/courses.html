@@ -78,7 +78,11 @@
       </div>
    
       <div class="assignment">
-            <h3>Assignement</h3>
+         <h3>Upload assignement here</h3>
+         <form action="/student/upload/{{ course.name }}" method="post" enctype="multipart/form-data">
+           <input type="file" name="file" accept=".pdf, .doc, .docx">
+           <button class="option-btn" type="submit">Upload</button>
+         </form>
       </div>
 
    </div>
