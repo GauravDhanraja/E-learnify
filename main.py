@@ -81,7 +81,7 @@ def student_dashboard():
 def student_profile_page():
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name" : user_details["name"], "usn": user_details["usn"]}
     return render_template("public/profile.html",userData = userData)
 
 
@@ -90,7 +90,6 @@ def student_course(course_id):
     if 'user_id' in session:
         user_details = get_users_data()
         userData = {"name": user_details["name"]}
-        
         course = courses[course_id]
         course_notes = show_course_notes(course['name'])
         
@@ -325,7 +324,7 @@ def admin_dashboard():
 def admin_profile_page():
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name" : user_details["name"], "course": user_details["course_name"], "code": user_details["course_code"], "lect": user_details["lect"], "dep": user_details["dep"]}
     return render_template("admin/profile.html",userData = userData)
 
 

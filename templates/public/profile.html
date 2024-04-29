@@ -56,7 +56,6 @@
    <nav class="navbar">
       <a href="/student/home"><i class="fas fa-home"></i><span>Home</span></a>
       <a href="/student/announcements"><i class="fas fa-question"></i><span>Announcement</span></a>
-      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Teachers</span></a>
       
    </nav>
 
@@ -70,8 +69,14 @@
 
       <div class="user">
          <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture">
-         <h3>student</h3>
-         <a href="update.html" class="inline-btn">update profile</a>
+         <h3>Student</h3>
+         <div class="details">
+         <p>Name: {{ userData.name }}</p>
+         <p>USN: {{ userData.usn }}</p>
+         <p>Couse: BTech</p>
+         <p>Branch: Artificial Intelligence and Machine Learning</p>
+         <P>College: NMAMIT</P>
+         </div>
       </div>
 
 </section>

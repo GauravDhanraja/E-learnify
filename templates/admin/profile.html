@@ -69,8 +69,14 @@
 
       <div class="user">
          <img src="{{ url_for('get_user_profile_pic', filename='pfp.png') }}" alt="Profile Picture">
-         <h3>{{ userData.name }}</h3>
-         <a href="update.html" class="inline-btn">update profile</a>
+         <h3>Lecturer</h3>
+         <div class="details">
+         <p>Name: {{ userData.lect }}</p>
+         <p>Course: {{ userData.course }}</p>
+         <p>Code: {{ userData.code }}</p>
+         <p>Department: {{ userData.dep }}</p>
+         <P>College: NMAMIT</P>
+         </div>
       </div>
 
 </section>

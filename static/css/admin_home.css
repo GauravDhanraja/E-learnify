@@ -95,7 +95,8 @@
 
 .dashboard .box-container .uploaded-files .file-item{
     display: inline;
-    margin-top: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 .dashboard .box-container .uploaded-files .file-item p{
     grid-template-columns: 1fr;
