@@ -362,7 +362,18 @@ def admin_students_list():
     if 'user_id' in session:
         user_details = get_users_data()
         userData = {"name": user_details["name"]}
-    return render_template("admin/students.html", userData = userData)
+        students_ref = db.collection('users').where('role', '==', 'student').get()
+        
+        student_name = []
+        student_usn = []
+        for student_doc in students_ref:
+            student_data = student_doc.to_dict()
+            name = student_data.get('name')
+            usn = student_data.get('usn')
+            if name and usn:
+                student_name.append(name)
+                student_usn.append(usn)
+    return render_template("admin/students.html", userData = userData, student_name = student_name, student_usn = student_usn)
 
 
 if __name__ == "__main__":

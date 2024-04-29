@@ -61,15 +61,18 @@
 
 </div>
 
-<section class="teachers">
-
-   <h1 class="heading">Students</h1>
-
+<section class="students">
+   <h1>Students</h1>
    <div class="box-container">
-
-
-
+      {% for i in range(0, student_name|length) %}
+         <div class="student-box">
+            <h3 class="name">{{ student_name[i] }}</h3>
+            <p class="usn">{{ student_usn[i] }}</p>
+         </div>
+      {% endfor %}
+   </div>
 </section>
+
 
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
