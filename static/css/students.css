@@ -2,10 +2,12 @@
 .students .box-container{
     display: grid;
     grid-template-rows: auto;
+    width: 60%;
+    margin: auto;   
     background-color: var(--white);
     border-radius: 0.5rem;
-    padding-right: 2.5rem;
-    padding-left: 2.5rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
     padding-bottom: 2.5rem;
 }
 
@@ -13,10 +15,18 @@
     font-size: 1.8rem;
     color: var(--black);
     margin-top: 2.5rem; 
+    border-top: var(--border);
 }
 
 .students .box-container .usn{
     font-size: 1.8rem;
     color: var(--black);
-    border-bottom: var(--border);
+    margin-bottom: 0.5rem;
+}
+
+.students .box-container .file-list form button{
+    margin-bottom: 0.5rem;
+    background-color: var(--white);
+    color: var(--red);
+    cursor: pointer;
 }

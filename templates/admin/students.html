@@ -72,8 +72,12 @@
                <ul>
                   {% for file_data in student_files[i] %}
                      <li>
-                        <a href="{{ file_data.download_url }}">{{ file_data.filename }}</a>
-                     </li>
+                        <form action="/admin/assignment_file" method="post">
+                           <input type="hidden" name="filename" value="{{ file_data['filename'] }}">
+                           <input type="hidden" name="usn" value="{{ student_usn[i] }}">
+                           <button class="" type="submit">{{ file_data['filename'] }}</button>
+                       </form>
+                     </li>                       
                   {% endfor %}
                </ul>
             </div>
@@ -81,8 +85,6 @@
       {% endfor %}
    </div>
 </section>
-
-
 
 
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>

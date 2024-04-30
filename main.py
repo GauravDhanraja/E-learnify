@@ -28,7 +28,7 @@ def sign_in(email, password):
     return user_record
 
 def sign_out():
-    del session['user_id']
+    session.clear()
     return True
 
 def get_users_data():
@@ -357,6 +357,10 @@ def admin_profile_page():
     return render_template("admin/profile.html",userData = userData)
 
 
+def get_usn(student_doc):
+    student_data = student_doc.to_dict()
+    return student_data.get('usn')
+
 @app.route("/admin/students", methods=["GET"])
 def admin_students_list():
     if 'user_id' in session:
@@ -368,16 +372,16 @@ def admin_students_list():
         student_usn = []    
         student_files = []
         for student_doc in students_ref:
-            student_data = student_doc.to_dict()
-            name = student_data.get('name')
-            usn = student_data.get('usn')
+            name = student_doc.get('name')
+            usn = get_usn(student_doc)
             if name and usn:
                 student_name.append(name)
                 student_usn.append(usn)
                 file_data = show_assignment(usn)
                 student_files.append(file_data)  
         
-        return render_template("admin/students.html", userData = userData, student_name = student_name, student_usn = student_usn, student_files = student_files)
+        return render_template("admin/students.html", userData=userData, student_name=student_name, student_usn=student_usn, student_files=student_files)
+
 
 def show_assignment(usn):
     user_uid = session.get('user_uid')
@@ -390,14 +394,37 @@ def show_assignment(usn):
         files = []
         for blob in student_blobs:
             file_data = {
-                'filename': blob.name.split('/')[-1],
-                'download_url': blob.public_url
+                'filename': blob.name.split('/')[-1]
             }
             files.append(file_data)
         
         return files
     else:
         return []
+
+
+@app.route('/admin/assignment_file', methods=['POST'])
+def assignment_file():
+    filename = request.form['filename']
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        usn = request.form.get('usn')
+        if usn:
+            blob_name = f"subjects/{user_name}/private/{usn}/{filename}"
+            blob = bucket.blob(blob_name)
+            if blob.exists():
+                expiration_time = datetime.utcnow() + timedelta(minutes=60)  # expires in 1 hour
+                signed_url = blob.generate_signed_url(expiration=expiration_time, method='GET')
+                return redirect(signed_url)
+            else:
+                return "File not found!", 404
+        else:
+            return "USN not provided!", 400
+    else:
+        return "User not found!", 404
+
 
 
 if __name__ == "__main__":
