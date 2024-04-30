@@ -81,7 +81,7 @@ def student_dashboard():
 def student_profile_page():
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name" : user_details["name"], "usn": user_details["usn"]}
     return render_template("public/profile.html",userData = userData)
 
 
@@ -90,7 +90,6 @@ def student_course(course_id):
     if 'user_id' in session:
         user_details = get_users_data()
         userData = {"name": user_details["name"]}
-        
         course = courses[course_id]
         course_notes = show_course_notes(course['name'])
         
@@ -115,23 +114,52 @@ def download_course_notes(course_name, filename):
     else:
         return "Unauthorized", 401
 
-def show_course_notes(course_name):  
-    user_uid = session.get('user_uid')
-    user_details = get_users_data()
-    course = next((c for c in courses if c['name'] == course_name), None)
-    if course:
-        upload_path = f"subjects/{course_name}/public"  
-        blobs = list(bucket.list_blobs(prefix=f"subjects/{course_name}/public/"))
-        files = []
-        for blob in blobs:
-            file_data = {
-                'filename': blob.name.split('/')[-1],
-                'download_url': blob.public_url
-            }
-            files.append(file_data)
-        return files
-    else:
-        return []
+def show_course_notes(course_name):
+    if 'user_id' in session:  
+        user_uid = session.get('user_uid')
+        user_details = get_users_data()
+        course = next((c for c in courses if c['name'] == course_name), None)
+        if course:
+            upload_path = f"subjects/{course_name}/public"  
+            blobs = list(bucket.list_blobs(prefix=f"subjects/{course_name}/public/"))
+            files = []
+            for blob in blobs:
+                file_data = {
+                    'filename': blob.name.split('/')[-1],
+                    'download_url': blob.public_url
+                }
+                files.append(file_data)
+            return files
+        else:
+            return []
+
+@app.route('/student/upload/<course_name>', methods=['POST'])
+def upload_assignment(course_name):
+    if 'user_id' in session:
+        uploaded_file = request.files['file']
+        if uploaded_file.filename == '':
+            return """ 
+            <script>
+                alert("No file selected for upload!");
+                window.history.back();
+            </script>
+            """
+
+        user_uid = session.get('user_uid')
+        user_details = get_users_data()
+        usn = user_details["usn"]
+        course = next((c for c in courses if c['name'] == course_name), None)
+        if course:
+            upload_path = f"subjects/{course_name}/private/{usn}"
+
+            filename = uploaded_file.filename
+            blob = bucket.blob(upload_path + '/' + filename)
+            blob.upload_from_file(uploaded_file)
+
+            return redirect(url_for("student_dashboard"))
+        else:
+            return "User not found!", 404
+
 
 
 @app.route('/userprof/<filename>')
@@ -325,8 +353,27 @@ def admin_dashboard():
 def admin_profile_page():
     if 'user_id' in session:
         user_details = get_users_data()
-        userData = {"name" : user_details["name"],}
+        userData = {"name" : user_details["name"], "course": user_details["course_name"], "code": user_details["course_code"], "lect": user_details["lect"], "dep": user_details["dep"]}
     return render_template("admin/profile.html",userData = userData)
+
+
+@app.route("/admin/students", methods = ["GET"])
+def admin_students_list():
+    if 'user_id' in session:
+        user_details = get_users_data()
+        userData = {"name": user_details["name"]}
+        students_ref = db.collection('users').where('role', '==', 'student').get()
+        
+        student_name = []
+        student_usn = []
+        for student_doc in students_ref:
+            student_data = student_doc.to_dict()
+            name = student_data.get('name')
+            usn = student_data.get('usn')
+            if name and usn:
+                student_name.append(name)
+                student_usn.append(usn)
+    return render_template("admin/students.html", userData = userData, student_name = student_name, student_usn = student_usn)
 
 
 if __name__ == "__main__":

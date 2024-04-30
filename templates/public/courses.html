@@ -56,7 +56,6 @@
    <nav class="navbar">
       <a href="/student/home"><i class="fas fa-home"></i><span>Home</span></a>
       <a href="/student/announcements"><i class="fas fa-question"></i><span>Announcement</span></a>
-      <a href="teachers.html"><i class="fas fa-chalkboard-user"></i><span>Teachers</span></a>
       
    </nav>
 
@@ -79,7 +78,11 @@
       </div>
    
       <div class="assignment">
-            <h3>Assignement</h3>
+         <h3>Upload assignement here</h3>
+         <form action="/student/upload/{{ course.name }}" method="post" enctype="multipart/form-data">
+           <input type="file" name="file" accept=".pdf, .doc, .docx">
+           <button class="option-btn" type="submit">Upload</button>
+         </form>
       </div>
 
    </div>
