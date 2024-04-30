@@ -1,0 +1,22 @@
+
+.students .box-container{
+    display: grid;
+    grid-template-rows: auto;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.students .box-container .name{
+    font-size: 1.8rem;
+    color: var(--black);
+    margin-top: 2.5rem; 
+}
+
+.students .box-container .usn{
+    font-size: 1.8rem;
+    color: var(--black);
+    border-bottom: var(--border);
+}

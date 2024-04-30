@@ -357,7 +357,7 @@ def admin_profile_page():
     return render_template("admin/profile.html",userData = userData)
 
 
-@app.route("/admin/students", methods = ["GET"])
+@app.route("/admin/students", methods=["GET"])
 def admin_students_list():
     if 'user_id' in session:
         user_details = get_users_data()
@@ -365,7 +365,8 @@ def admin_students_list():
         students_ref = db.collection('users').where('role', '==', 'student').get()
         
         student_name = []
-        student_usn = []
+        student_usn = []    
+        student_files = []
         for student_doc in students_ref:
             student_data = student_doc.to_dict()
             name = student_data.get('name')
@@ -373,7 +374,30 @@ def admin_students_list():
             if name and usn:
                 student_name.append(name)
                 student_usn.append(usn)
-    return render_template("admin/students.html", userData = userData, student_name = student_name, student_usn = student_usn)
+                file_data = show_assignment(usn)
+                student_files.append(file_data)  
+        
+        return render_template("admin/students.html", userData = userData, student_name = student_name, student_usn = student_usn, student_files = student_files)
+
+def show_assignment(usn):
+    user_uid = session.get('user_uid')
+    user_details = get_users_data()
+    if user_details:
+        user_name = user_details["name"]
+        upload_path = f"subjects/{user_name}/private"
+        student_folder_prefix = f"{upload_path}/{usn}/"  
+        student_blobs = list(bucket.list_blobs(prefix=student_folder_prefix))
+        files = []
+        for blob in student_blobs:
+            file_data = {
+                'filename': blob.name.split('/')[-1],
+                'download_url': blob.public_url
+            }
+            files.append(file_data)
+        
+        return files
+    else:
+        return []
 
 
 if __name__ == "__main__":
