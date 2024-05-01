@@ -11,11 +11,14 @@
     padding-bottom: 2.5rem;
 }
 
+.students .box-container .student-box{
+    border-bottom: var(--border);
+}
+
 .students .box-container .name{
     font-size: 1.8rem;
     color: var(--black);
     margin-top: 2.5rem; 
-    border-top: var(--border);
 }
 
 .students .box-container .usn{
