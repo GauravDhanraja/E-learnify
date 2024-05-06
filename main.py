@@ -199,7 +199,7 @@ def update_message():
         ann_ref.update({'message': message})
     except Exception as e:
         return f"Failed to post announcement: {str(e)}"
-    return "Announcement submitted successfully!"  
+    return redirect(url_for("admin_dashboard"))
 
 @app.route("/student/announcements", methods = ["GET"])
 def announcement_dashboard():
