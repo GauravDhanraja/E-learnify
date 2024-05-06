@@ -429,4 +429,4 @@ def assignment_file():
 
 if __name__ == "__main__":
     app.secret_key = os.environ.get("FLASK_SECRET_KEY", "MeOWmEWOnIGGAa")
-    app.run(debug=False)
+    app.run(debug=False, host='127.0.0.1', port=5000)
